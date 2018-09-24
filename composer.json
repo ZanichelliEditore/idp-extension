@@ -1,0 +1,15 @@
+{
+    "name": "zanichelli/zanichelli-idp",
+    "description": "Classes to interact with the Zanichelli identity provider",
+    "authors": [
+        {
+            "name": "Zanichelli",
+            "email": "assistenza@zanichelli.it"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.1.3",
+        "laravel/framework": "5.6.*"
+    }
+}
