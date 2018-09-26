@@ -8,6 +8,9 @@
  * @author Andrea De Castri
  */
 
+namespace Zanichelli\IdentityProvider\Middleware;
+
+use Closure;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
