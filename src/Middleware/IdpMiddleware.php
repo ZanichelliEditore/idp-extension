@@ -26,7 +26,7 @@ abstract class IdpMiddleware {
             $token = $request->input('token');
 
             $client = new Client(['verify' => false]);
-            $response = $client->get(env('IDP_TOKEN') . '?token=' . $token);
+            $response = $client->get(env('IDP_TOKEN_URL') . '?token=' . $token);
 
             if($response->getStatusCode() == 200){
 
