@@ -8,7 +8,9 @@
  * @author Andrea De Castri
  */
 
+use GuzzleHttp\Client;
 use Illuminate\Contracts\Auth\UserProvider;
+use Zanichelli\IdentityProvider\Models\ZUser;
 
 
 class ZAuthServiceProvider implements UserProvider {
@@ -56,7 +58,41 @@ class ZAuthServiceProvider implements UserProvider {
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveByCredentials(array $credentials){
-        // TODO: Implement retrieveByCredentials() method.
+
+        if(empty($credentials) || empty($credentials['username']) || empty($credentials['password'])){
+            return null;
+        }
+
+        $client = new Client();
+
+        try {
+            $response = $client->post('/v1/login', [
+                'body' => [
+                    'username' => $credentials['username'],
+                    'password' => $credentials['password']
+                ],
+                'headers' => [
+                    'Accept' => 'application/json'
+                ]
+            ]);
+
+            if($response->getStatusCode() !== 200){
+                return null;
+            }
+
+            $data = \GuzzleHttp\json_decode($response->getBody());
+
+            $user = $data->user;
+            $token = $data->token;
+
+            // TODO vedere ruoli (easy), permessi (meno easy)
+            return ZUser::create($user->id, $user->username, $user->email, $token, $user->is_verified, $user->name,
+                $user->surname, $user->is_employee, $user->created_at, [], []);
+
+        } catch (Exception $e){
+            return null;
+        }
+
     }
 
     /**
