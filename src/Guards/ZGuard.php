@@ -94,7 +94,7 @@ class ZGuard implements Guard, StatefulGuard {
      * @return bool
      */
     public function validate(array $credentials = []){
-        // Do nothing
+        return false;
     }
 
     /**
@@ -135,7 +135,7 @@ class ZGuard implements Guard, StatefulGuard {
      * @return bool
      */
     public function once(array $credentials = []){
-        // TODO: Implement once() method.
+        return false;
     }
 
     /**
@@ -146,7 +146,7 @@ class ZGuard implements Guard, StatefulGuard {
      * @return void
      */
     public function login(Authenticatable $user, $remember = false){
-        // TODO: Implement login() method.
+        // Do nothing
     }
 
     /**
@@ -157,7 +157,7 @@ class ZGuard implements Guard, StatefulGuard {
      * @return \Illuminate\Contracts\Auth\Authenticatable
      */
     public function loginUsingId($id, $remember = false){
-        // TODO: Implement loginUsingId() method.
+        return null;
     }
 
     /**
@@ -167,7 +167,7 @@ class ZGuard implements Guard, StatefulGuard {
      * @return bool
      */
     public function onceUsingId($id){
-        // TODO: Implement onceUsingId() method.
+        return false;
     }
 
     /**
@@ -176,7 +176,7 @@ class ZGuard implements Guard, StatefulGuard {
      * @return bool
      */
     public function viaRemember(){
-        // TODO: Implement viaRemember() method.
+        return false;
     }
 
     /**

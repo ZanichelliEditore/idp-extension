@@ -29,7 +29,6 @@ class ZAuthServiceProvider implements UserProvider {
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveById($identifier){
-        // TODO: Implement retrieveById() method.
         return null;
     }
 
@@ -41,7 +40,6 @@ class ZAuthServiceProvider implements UserProvider {
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveByToken($identifier, $token){
-        // TODO: Implement retrieveByToken() method.
         return null;
     }
 
@@ -53,7 +51,7 @@ class ZAuthServiceProvider implements UserProvider {
      * @return void
      */
     public function updateRememberToken(\Illuminate\Contracts\Auth\Authenticatable $user, $token){
-        // TODO: Implement updateRememberToken() method.
+        // Do nothing
     }
 
     /**
@@ -109,7 +107,6 @@ class ZAuthServiceProvider implements UserProvider {
      * @return bool
      */
     public function validateCredentials(\Illuminate\Contracts\Auth\Authenticatable $user, array $credentials){
-        // TODO: Implement validateCredentials() method.
         return false;
     }
 
