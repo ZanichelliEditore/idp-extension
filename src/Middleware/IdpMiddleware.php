@@ -58,9 +58,9 @@ abstract class IdpMiddleware {
 
         foreach ($roles as $role){
             if(empty($role->department)){
-                $roles[] = ZRole::create($role->role->id, $role->role->name, null, null);
+                $result[] = ZRole::create($role->role->id, $role->role->name, null, null);
             } else {
-                $roles[] = ZRole::create($role->role->id, $role->role->name, $role->department->id, $role->department->name);
+                $result[] = ZRole::create($role->role->id, $role->role->name, $role->department->id, $role->department->name);
             }
         }
 
