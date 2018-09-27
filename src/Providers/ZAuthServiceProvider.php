@@ -19,7 +19,7 @@ class ZAuthServiceProvider implements UserProvider {
     use ZUserBuilder;
 
     public function __construct(){
-        // TODO: Implement construct() method
+        // Do nothing
     }
 
     /**
@@ -30,6 +30,7 @@ class ZAuthServiceProvider implements UserProvider {
      */
     public function retrieveById($identifier){
         // TODO: Implement retrieveById() method.
+        return null;
     }
 
     /**
@@ -41,6 +42,7 @@ class ZAuthServiceProvider implements UserProvider {
      */
     public function retrieveByToken($identifier, $token){
         // TODO: Implement retrieveByToken() method.
+        return null;
     }
 
     /**
@@ -69,7 +71,7 @@ class ZAuthServiceProvider implements UserProvider {
         $client = new Client();
 
         try {
-            $response = $client->post('/v1/login', [
+            $response = $client->post(env('IDP_LOGIN_URL'), [
                 'body' => [
                     'username' => $credentials['username'],
                     'password' => $credentials['password']
@@ -108,6 +110,7 @@ class ZAuthServiceProvider implements UserProvider {
      */
     public function validateCredentials(\Illuminate\Contracts\Auth\Authenticatable $user, array $credentials){
         // TODO: Implement validateCredentials() method.
+        return false;
     }
 
 }
