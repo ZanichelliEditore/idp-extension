@@ -39,7 +39,7 @@ abstract class IdpMiddleware {
                 $user = ZUser::create($userJson->id, $userJson->username, $userJson->email, $token, $userJson->is_verified, $userJson->name,
                     $userJson->surname, $userJson->is_employee, $userJson->created_at, $roles, $permissions);
 
-                $user = $this->addExtraParametersToUser($user);
+                $this->addExtraParametersToUser($user);
 
                 Auth::setUser($user);
             }
@@ -82,6 +82,6 @@ abstract class IdpMiddleware {
      * @param $user
      * @return ZUser
      */
-    protected abstract function addExtraParametersToUser(ZUser $user);
+    protected abstract function addExtraParametersToUser(ZUser &$user);
 
 }
