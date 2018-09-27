@@ -34,7 +34,7 @@ abstract class IdpMiddleware {
 
                 $roles = $this->createRoleArray($userJson->roles);
 
-                $permissions = $this->retrievePermissions($userJson->id);
+                $permissions = $this->retrievePermissions($userJson->id, $roles);
 
                 $user = ZUser::create($userJson->id, $userJson->username, $userJson->email, $token, $userJson->is_verified, $userJson->name,
                     $userJson->surname, $userJson->is_employee, $userJson->created_at, $roles, $permissions);
@@ -70,10 +70,11 @@ abstract class IdpMiddleware {
     /**
      * Returns the array with permissions
      *
-     * @param int userId
+     * @param $userId
+     * @param array $roles
      * @return array
      */
-    protected abstract function retrievePermissions($userId);
+    protected abstract function retrievePermissions($userId, array $roles);
 
     /**
      * Returns a ZUser after adding extra parameters. Otherwise return $user
@@ -81,6 +82,6 @@ abstract class IdpMiddleware {
      * @param $user
      * @return ZUser
      */
-    protected abstract function addExtraParametersToUser($user);
+    protected abstract function addExtraParametersToUser(ZUser $user);
 
 }
