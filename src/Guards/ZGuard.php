@@ -13,8 +13,8 @@ namespace Zanichelli\IdentityProvider\Guards;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Session\Session;
-use ZAuthServiceProvider;
 
 
 class ZGuard implements Guard, StatefulGuard {
@@ -25,7 +25,7 @@ class ZGuard implements Guard, StatefulGuard {
 
     private $provider;
 
-    private function __construct(Session $session, ZAuthServiceProvider $provider){
+    private function __construct(Session $session, UserProvider $provider){
         $this->session = $session;
         $this->provider = $provider;
     }
@@ -34,10 +34,10 @@ class ZGuard implements Guard, StatefulGuard {
      * Factory to create ZGuard instance
      *
      * @param Session $session
-     * @param ZAuthServiceProvider $provider
+     * @param UserProvider $provider
      * @return ZGuard
      */
-    public static function create(Session $session, ZAuthServiceProvider $provider){
+    public static function create(Session $session, UserProvider $provider){
         return new self($session, $provider);
     }
 
