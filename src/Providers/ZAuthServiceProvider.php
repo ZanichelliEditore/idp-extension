@@ -11,9 +11,12 @@
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Auth\UserProvider;
 use Zanichelli\IdentityProvider\Models\ZUser;
+use Zanichelli\Models\ZTrait\ZUserBuilder;
 
 
 class ZAuthServiceProvider implements UserProvider {
+
+    use ZUserBuilder;
 
     public function __construct(){
         // TODO: Implement construct() method
@@ -52,7 +55,7 @@ class ZAuthServiceProvider implements UserProvider {
     }
 
     /**
-     * Retrieve a user by the given credentials.
+     * Retrieve a user by the given credentials, without his permissions.
      *
      * @param  array $credentials
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
@@ -85,9 +88,10 @@ class ZAuthServiceProvider implements UserProvider {
             $user = $data->user;
             $token = $data->token;
 
-            // TODO vedere ruoli (easy), permessi (meno easy)
+            $roles = $this->createRoleArray($user->roles);
+
             return ZUser::create($user->id, $user->username, $user->email, $token, $user->is_verified, $user->name,
-                $user->surname, $user->is_employee, $user->created_at, [], []);
+                $user->surname, $user->is_employee, $user->created_at, $roles);
 
         } catch (Exception $e){
             return null;

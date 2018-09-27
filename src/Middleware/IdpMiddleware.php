@@ -14,10 +14,12 @@ use Closure;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Zanichelli\IdentityProvider\Models\ZRole;
 use Zanichelli\IdentityProvider\Models\ZUser;
+use Zanichelli\Models\ZTrait\ZUserBuilder;
 
 abstract class IdpMiddleware {
+
+    use ZUserBuilder;
 
     public function handle(Request $request, Closure $next){
 
@@ -30,7 +32,7 @@ abstract class IdpMiddleware {
 
             if($response->getStatusCode() == 200){
 
-                $userJson = json_decode($response->getBody());
+                $userJson = \GuzzleHttp\json_decode($response->getBody());
 
                 $roles = $this->createRoleArray($userJson->roles);
 
@@ -51,20 +53,6 @@ abstract class IdpMiddleware {
         }
 
         return $next($request);
-    }
-
-    private function createRoleArray(array $roles){
-        $result = [];
-
-        foreach ($roles as $role){
-            if(empty($role->department)){
-                $result[] = ZRole::create($role->role->id, $role->role->name, null, null);
-            } else {
-                $result[] = ZRole::create($role->role->id, $role->role->name, $role->department->id, $role->department->name);
-            }
-        }
-
-        return $result;
     }
 
     /**
