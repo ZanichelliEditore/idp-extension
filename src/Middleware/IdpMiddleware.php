@@ -68,7 +68,6 @@ abstract class IdpMiddleware {
      * Returns a ZUser after adding extra parameters. Otherwise return $user
      *
      * @param $user
-     * @return ZUser
      */
     protected abstract function addExtraParametersToUser(ZUser &$user);
 
