@@ -23,11 +23,7 @@ trait ZUserBuilder {
         $result = [];
 
         foreach ($roles as $role){
-            if(empty($role->department)){
-                $result[] = ZRole::create($role->role->id, $role->role->name, null, null);
-            } else {
-                $result[] = ZRole::create($role->role->id, $role->role->name, $role->department->id, $role->department->name);
-            }
+            $result[] = ZRole::create($role->roleId, $role->roleName, $role->departmentId, $role->departmentName);
         }
 
         return $result;
