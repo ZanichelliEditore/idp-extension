@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Session\Session;
+use Zanichelli\IdentityProvider\Providers\ZAuthServiceProvider;
 
 
 class ZGuard implements Guard, StatefulGuard {
@@ -23,6 +24,7 @@ class ZGuard implements Guard, StatefulGuard {
 
     private $user;
 
+    /** @var ZAuthServiceProvider  */
     private $provider;
 
     private function __construct(Session $session, UserProvider $provider){
@@ -182,13 +184,24 @@ class ZGuard implements Guard, StatefulGuard {
     /**
      * Log the user out of the application.
      *
-     * @return void
+     * @return bool
      */
     public function logout(){
 
-        $this->user = null;
+        if(!$this->provider instanceof ZAuthServiceProvider){
+            return false;
+        }
 
-        $this->session->flush();
+        if($this->provider->logout($this->user->token)){
+
+            $this->user = null;
+
+            $this->session->flush();
+
+            return true;
+        }
+
+        return false;
     }
 
 }

@@ -8,6 +8,9 @@
  * @author Andrea De Castri
  */
 
+namespace Zanichelli\IdentityProvider\Providers;
+
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Auth\UserProvider;
 use Zanichelli\IdentityProvider\Models\ZUser;
@@ -108,6 +111,27 @@ class ZAuthServiceProvider implements UserProvider {
      */
     public function validateCredentials(\Illuminate\Contracts\Auth\Authenticatable $user, array $credentials){
         return false;
+    }
+
+    public function logout($token){
+        $client = new Client();
+
+        try {
+            $response = $client->get(env('IDP_LOGOUT_URL'), [
+                'query' => [
+                    'token' => $token
+                ]
+            ]);
+
+            if($response->getStatusCode() !== 200){
+                return false;
+            }
+
+        } catch (Exception $e){
+            return false;
+        }
+
+        return true;
     }
 
 }
