@@ -86,6 +86,12 @@ class ZGuard implements Guard, StatefulGuard {
             return $this->user->id;
         }
 
+        $this->user = $this->session->get('user');
+
+        if($this->user){
+            return $this->user->id;
+        }
+
         return null;
     }
 
@@ -192,7 +198,11 @@ class ZGuard implements Guard, StatefulGuard {
             return false;
         }
 
-        if($this->provider->logout($this->user->token)){
+        if(!$this->user){
+            $this->user = $this->session->get('user');
+        }
+
+        if($this->user && $this->provider->logout($this->user->token)){
 
             $this->user = null;
 
