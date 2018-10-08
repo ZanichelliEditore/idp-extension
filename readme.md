@@ -3,7 +3,7 @@
 ## Come integrare la libreria
 ### Step 1 - Creazione chiave OAuth
 Andare su bitbucket.org, cliccare sull'immagine del profilo in basso a sinistra e andare su Bitbucket settings. Successivamente cliccare sulla voce OAuth 
-e aggiungere un consumer. Per aggiungere un comsumer è necessario specificare le seguenti voci:
+e aggiungere un consumer. Per aggiungere un comsumer ï¿½ necessario specificare le seguenti voci:
 
   * Name (Nome a piacere)
   * Callback URL (URL fittizio esempio: http://www.example.com)
@@ -12,7 +12,7 @@ e aggiungere un consumer. Per aggiungere un comsumer è necessario specificare le
 Salvando il consumer si vanno a generare una Key e una Secret Key, che saranno richieste per il download della libreria.
 
 ### Step 2 - Aggiungere la dipendenza al composer.json
-Per aggiungere la libreria è necessario effettuare le seguenti modifiche al file composer.json:
+Per aggiungere la libreria ï¿½ necessario effettuare le seguenti modifiche al file composer.json:
 
   * Aggiungere **"zanichelli/zanichelli-idp": "dev-master"** nei require
   * Aggiungere sotto autoload -> classmap la riga **"vendor/zanichelli"**
@@ -23,7 +23,7 @@ l'esecuzione vengono richiesti i parametri che abbiamo generato nello Step 1.
 **N.B.** A volte potrebbe essere richiesto un token; in questo caso cliccate invio e ignorate l'errore visualizzato.
 
 ## Settings Envirorment (IDP)
-Nel file di envirorment **.env** è necessario aggiungere tre variabili obbligatorie che gestiscono il login con l'IDP attraverso il middleware IDP:
+Nel file di envirorment **.env** ï¿½ necessario aggiungere tre variabili obbligatorie che gestiscono il login con l'IDP attraverso il middleware IDP:
 
   * IDP_URL=https://idp.zanichelli.it/loginForm
   * IDP_TOKEN_URL=https://idp.zanichelli.it/v1/loginWithToken
@@ -36,13 +36,13 @@ anche la seguente variabile:
 
 ## Implementazione del Middleware IDP
 Nella cartella App\Http\Middleware aggiungere una classe che estende **IdpMiddleware** (namespace Zanichelli\IdentityProvider\Middleware) presente 
-nella libreria. La classe dovrà implementare due metodi astratti:
+nella libreria. La classe dovrï¿½ implementare due metodi astratti:
 
   * **retrievePermissions**: questo metodo prende in ingresso l'id dell'utente e l'array dei ruoli che appartengono ad esso. 
     Nel corpo del metodo si dovranno recuperare i permessi dell'utente in base ai suoi ruoli. Il metodo, infine, deve ritornare un array 
     di permessi (array di stringhe).
-  * **addExtraParametersToUser**: il metodo prende in ingresso un'istanza di un utente, in cui è possibile aggiungere campi 
-    extra. Esempio, se il mio utete deve contenere il codice funzionario dovrò scrivere semplicemente $user->agentCode = 052.
+  * **addExtraParametersToUser**: il metodo prende in ingresso un'istanza di un utente, in cui ï¿½ possibile aggiungere campi 
+    extra. Esempio, se il mio utete deve contenere il codice funzionario dovrï¿½ scrivere semplicemente $user->agentCode = 052.
     
 ## Modifica del AuthServiceProvider
 Nella classe **AuthServiceProvider**, presente nella cartella App\Http\Middleware, aggiungere dentro il metodo boot il seguente codice:
@@ -56,7 +56,7 @@ Nella classe **AuthServiceProvider**, presente nella cartella App\Http\Middlewar
     });
     
 La prima funzione crea un nuovo driver la l'AuthServiceProvider con id **z-provider**, mentre la seconda funzione crea un driver per una nuova guardia con
-id **z-session**. Il passo successivo è quello di modificare le configurazioni dell'applicazione in modo da utilizzare i driver creati.
+id **z-session**. Il passo successivo ï¿½ quello di modificare le configurazioni dell'applicazione in modo da utilizzare i driver creati.
 
 ## Modifica del file config/auth.php
 Nel file di configurazione dobbiamo creare una nuova guardia e un nuovo provider che utilizzino i nuovi driver. Per semplificare le cose i nomi della
@@ -77,16 +77,16 @@ Una volta  creata questa guardia, la dobbiamo impostare come quella di default. 
     ]
     
 # Basics
-Con queste modifiche è possibile utilizzare alcune funzionalità di Laravel per la gestione degli utenti autenticati. La classe di utilità di Laravel che 
-ha il compito di gestire gli utenti è **Auth**. Questa classe permette di accedere ai seguenti metodi Facades:
+Con queste modifiche ï¿½ possibile utilizzare alcune funzionalitï¿½ di Laravel per la gestione degli utenti autenticati. La classe di utilitï¿½ di Laravel che 
+ha il compito di gestire gli utenti ï¿½ **Auth**. Questa classe permette di accedere ai seguenti metodi Facades:
 
-  * **Auth::check()** ritorna true se c'è un utente loggato
-  * **Auth::guest()** ritorna true se NON c'è un utente loggato
-  * **Auth::user()** ritorna un'istanza di un utente, rappresentato dalla classe ZUser
-  * **Auth::id()** ritorna l'id dell'utente loggato
+  * **Auth::check()** ritorna true se c'ï¿½ un utente loggato, altrimenti false
+  * **Auth::guest()** ritorna true se NON c'ï¿½ un utente loggato, altrimenti false
+  * **Auth::user()** ritorna un'istanza di un utente (classe ZUser) se loggato, altrimenti null 
+  * **Auth::id()** ritorna l'id dell'utente se loggato, altrimenti null
   * **Auth::setUser($user)** imposta l'utente loggato nella session
-  * **Auth::attempt($credentials, $remember)** effettua il login con l'IDP senza passare per la form dell'IDP
-  * **Auth::logout()** effettua il logout dell'utente e lo cancella dalla sessione
+  * **Auth::attempt($credentials, $remember)** effettua il login con l'IDP senza passare per la form dell'IDP; ritorna true se andato a buon fine, altrimenti false
+  * **Auth::logout()** effettua il logout dell'utente e lo cancella dalla sessione; ritorna true se andato a buon fine, altrimenti false
     
 
 
