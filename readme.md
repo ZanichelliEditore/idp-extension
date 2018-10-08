@@ -43,6 +43,26 @@ nella libreria. La classe dovrà implementare due metodi astratti:
     di permessi (array di stringhe).
   * **addExtraParametersToUser**: il metodo prende in ingresso un'istanza di un utente, in cui è possibile aggiungere campi 
     extra. Esempio, se il mio utete deve contenere il codice funzionario dovrò scrivere semplicemente $user->agentCode = 052.
+    
+## Modifica del AuthServiceProvider
+Nella classe **AuthServiceProvider**, presente nella cartella App\Http\Middleware, aggiungere dentro il metodo boot il seguente codice:
+>
+
+    Auth::provider('z-provider', function ($app, array $config){
+        return new ZAuthServiceProvider();
+    });
+    
+    Auth::extend('z-session', function ($app, $name, array $config){
+        return ZGuard::create($this->app['session.store'], Auth::createUserProvider($config['provider']));
+    });
+    
+La prima funzione crea un nuovo driver la l'AuthServiceProvider con id **z-provider**, mentre la seconda funzione crea un driver per una nuova guardia con
+id **z-session**. Il passo successivo è quello di modificare le configurazioni dell'applicazione in modo da utilizzare i driver creati.
+
+## Modifica del file config/auth.php
+
+
+
 
 
 
