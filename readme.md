@@ -21,3 +21,32 @@ Per aggiungere la libreria è necessario effettuare le seguenti modifiche al file
 Entrare dentro un CMD, posizionarsi nella root del progetto in cui si trova il file composer.json ed eseguire il comando **composer update**. Durante 
 l'esecuzione vengono richiesti i parametri che abbiamo generato nello Step 1.
 **N.B.** A volte potrebbe essere richiesto un token; in questo caso cliccate invio e ignorate l'errore visualizzato.
+
+## Settings Envirorment (IDP)
+Nel file di envirorment **.env** è necessario aggiungere tre variabili obbligatorie che gestiscono il login con l'IDP attraverso il middleware IDP:
+
+  * IDP_URL=https://idp.zanichelli.it/loginForm
+  * IDP_TOKEN_URL=https://idp.zanichelli.it/v1/loginWithToken
+  * IDP_LOGOUT_URL=https://idp.zanichelli.it/v1/logout
+
+Per chi volesse gestire il login manualmente con una View custom della propria applicazione, senza passare dalla form dell'IDP, deve aggiungere 
+anche la seguente variabile:
+
+  * IDP_LOGIN_URL=https://idp.zanichelli.it/v1/login
+
+## Implementazione del Middleware IDP
+Nella cartella App\Http\Middleware aggiungere una classe che estende **IdpMiddleware** (namespace Zanichelli\IdentityProvider\Middleware) presente 
+nella libreria. La classe dovrà implementare due metodi astratti:
+
+  * **retrievePermissions**: questo metodo prende in ingresso l'id dell'utente e l'array dei ruoli che appartengono ad esso. 
+    Nel corpo del metodo si dovranno recuperare i permessi dell'utente in base ai suoi ruoli. Il metodo, infine, deve ritornare un array 
+    di permessi (array di stringhe).
+  * **addExtraParametersToUser**: il metodo prende in ingresso un'istanza di un utente, in cui è possibile aggiungere campi 
+    extra. Esempio, se il mio utete deve contenere il codice funzionario dovrò scrivere semplicemente $user->agentCode = 052.
+
+
+
+
+
+
+
