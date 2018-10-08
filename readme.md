@@ -6,7 +6,7 @@ Andare su bitbucket.org, cliccare sull'immagine del profilo in basso a sinistra 
 e aggiungere un consumer. Per aggiungere un comsumer è necessario specificare le seguenti voci:
 
   * Name (Nome a piacere)
-  * Callback URL (URL fittizio esempio: www.example.com)
+  * Callback URL (URL fittizio esempio: http://www.example.com)
   * Nelle permissions selezionare nei Projects il permesso di sola lettura
 
 Salvando il consumer si vanno a generare una Key e una Secret Key, che saranno richieste per il download della libreria.
@@ -18,4 +18,6 @@ Per aggiungere la libreria è necessario effettuare le seguenti modifiche al file
   * Aggiungere sotto autoload -> classmap la riga **"vendor/zanichelli"**
 
 ### Step 3 - Eseguire il composer
-Entrare dentro un CMD, posizionarsi nella root del progetto in cui si trova il file composer.json ed eseguire il comando **composer update**
+Entrare dentro un CMD, posizionarsi nella root del progetto in cui si trova il file composer.json ed eseguire il comando **composer update**. Durante 
+l'esecuzione vengono richiesti i parametri che abbiamo generato nello Step 1.
+**N.B.** A volte potrebbe essere richiesto un token; in questo caso cliccate invio e ignorate l'errore visualizzato.
