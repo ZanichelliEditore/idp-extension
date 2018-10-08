@@ -129,11 +129,16 @@ class ZGuard implements Guard, StatefulGuard {
 
         $user = $this->provider->retrieveByCredentials($credentials);
 
-        $this->session->put('user', $user);
+        if(!is_null($user)){
 
-        $this->user = $user;
+            $this->session->put('user', $user);
 
-        return !is_null($user);
+            $this->user = $user;
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
