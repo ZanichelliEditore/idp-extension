@@ -76,6 +76,18 @@ Una volta  creata questa guardia, la dobbiamo impostare come quella di default. 
         'driver' => 'z-provider'
     ]
     
+## Basics
+Con queste modifiche è possibile utilizzare alcune funzionalità di Laravel per la gestione degli utenti autenticati. La classe di utilità di Laravel che 
+ha il compito di gestire gli utenti è **Auth**. Questa classe permette di accedere ai seguenti metodi Facades:
+
+  * **AUTH::check()** ritorna true se c'è un utente loggato
+  * **AUTH::guest()** ritorna true se NON c'è un utente loggato
+  * **AUTH::user()** ritorna un'istanza di un utente, rappresentato dalla classe ZUser
+  * **AUTH::id()** ritorna l'id dell'utente loggato
+  * **AUTH::setUser($user)** imposta l'utente loggato nella session
+  * **AUTH::attempt($credentials, $remember)** effettua il login con l'IDP senza passare per la form dell'IDP
+  * **AUTH::logout()** effettua il logout dell'utente e lo cancella dalla sessione
+    
 
 
 
