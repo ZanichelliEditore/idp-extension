@@ -76,7 +76,7 @@ Una volta  creata questa guardia, la dobbiamo impostare come quella di default. 
         'driver' => 'z-provider'
     ]
     
-## Basics
+# Basics
 Con queste modifiche è possibile utilizzare alcune funzionalità di Laravel per la gestione degli utenti autenticati. La classe di utilità di Laravel che 
 ha il compito di gestire gli utenti è **Auth**. Questa classe permette di accedere ai seguenti metodi Facades:
 
