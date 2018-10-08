@@ -46,7 +46,6 @@ nella libreria. La classe dovrà implementare due metodi astratti:
     
 ## Modifica del AuthServiceProvider
 Nella classe **AuthServiceProvider**, presente nella cartella App\Http\Middleware, aggiungere dentro il metodo boot il seguente codice:
->
 
     Auth::provider('z-provider', function ($app, array $config){
         return new ZAuthServiceProvider();
