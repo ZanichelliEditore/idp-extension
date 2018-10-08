@@ -59,6 +59,24 @@ La prima funzione crea un nuovo driver la l'AuthServiceProvider con id **z-provi
 id **z-session**. Il passo successivo è quello di modificare le configurazioni dell'applicazione in modo da utilizzare i driver creati.
 
 ## Modifica del file config/auth.php
+Nel file di configurazione dobbiamo creare una nuova guardia e un nuovo provider che utilizzino i nuovi driver. Per semplificare le cose i nomi della
+guardia e del provider sono gli stessi a quelli dati ai driver creati precedentemente.
+
+Come prima cosa creaiamo una nuova guardia, aggiungendo all'array di guards il seguente valore:
+
+    'z-session' => [
+        'driver' => 'z-session',
+        'provider => 'z-provider'
+    ]
+    
+Una volta  creata questa guardia, la dobbiamo impostare come quella di default. Quindi, andiamo nell'array **defaults** e cambiamo il valore di **guard** in
+**z-session**. Successivamente andiamo ad aggiungere all'array **providers** il seguente valore:
+
+    'z-provider' => [
+        'driver' => 'z-provider'
+    ]
+    
+
 
 
 
