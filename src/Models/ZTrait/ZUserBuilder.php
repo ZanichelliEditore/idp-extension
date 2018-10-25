@@ -10,6 +10,7 @@ namespace Zanichelli\Models\ZTrait;
 
 
 use Zanichelli\IdentityProvider\Models\ZRole;
+use Zanichelli\Models\ZAttribute;
 
 trait ZUserBuilder {
 
@@ -23,7 +24,23 @@ trait ZUserBuilder {
         $result = [];
 
         foreach ($roles as $role){
-            $result[] = ZRole::create($role->roleId, $role->roleName, $role->departmentId, $role->departmentName);
+            $result[] = ZRole::create($role->roleId, $role->roleName, $role->departmentId, $role->departmentName, $role->branchCode);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns an array of ZAttribute
+     *
+     * @param array $attributes
+     * @return array
+     */
+    protected function createAttributeArray(array $attributes){
+        $result = [];
+
+        foreach ($attributes as $attribute){
+            $result[] = ZAttribute::create($attribute->key, $attribute->value);
         }
 
         return $result;

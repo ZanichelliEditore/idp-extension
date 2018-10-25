@@ -17,16 +17,18 @@ class ZRole {
     public $roleName;
     public $departmentId;
     public $departmentName;
+    public $branchCode;
 
-    private function __construct($roleId, $roleName, $departmentId, $departmentName){
+    private function __construct($roleId, $roleName, $departmentId, $departmentName, $branchCode){
         $this->roleId = $roleId;
         $this->roleName = $roleName;
         $this->departmentId = $departmentId;
         $this->departmentName = $departmentName;
+        $this->branchCode = $branchCode;
     }
 
-    public static function create($roleId, $roleName, $departmentId, $departmentName){
-        return new self($roleId, $roleName, $departmentId, $departmentName);
+    public static function create($roleId, $roleName, $departmentId, $departmentName, $branchCode){
+        return new self($roleId, $roleName, $departmentId, $departmentName, $branchCode);
     }
 
 }

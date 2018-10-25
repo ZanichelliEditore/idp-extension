@@ -26,9 +26,10 @@ class ZUser implements Authenticatable {
     public $createdAt;
     public $roles;
     public $permissions;
+    public $attributes;
 
     private function __construct($id, $username, $email, $token, $isVerified, $name, $surname,
-                                $isEmployee, $createdAt, $roles = [], $permissions = []){
+                                $isEmployee, $createdAt, $roles = [], $permissions = [], $attributes = []){
         $this->id = $id;
         $this->email = $email;
         $this->username = $username;
@@ -40,6 +41,7 @@ class ZUser implements Authenticatable {
         $this->createdAt = $createdAt;
         $this->roles = $roles;
         $this->permissions = $permissions;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -56,11 +58,12 @@ class ZUser implements Authenticatable {
      * @param $createdAt
      * @param array $roles
      * @param array $permissions
+     * @param array $attributes
      * @return ZUser
      */
     public static function create($id, $username, $email, $token, $isVerified, $name, $surname,
-                                  $isEmployee, $createdAt, $roles = [], $permissions = []){
-        return new self($id, $username, $email, $token, $isVerified, $name, $surname, $isEmployee, $createdAt, $roles, $permissions);
+                                  $isEmployee, $createdAt, $roles = [], $permissions = [], $attributes = []){
+        return new self($id, $username, $email, $token, $isVerified, $name, $surname, $isEmployee, $createdAt, $roles, $permissions, $attributes);
     }
 
 

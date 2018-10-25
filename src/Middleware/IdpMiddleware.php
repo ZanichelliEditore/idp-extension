@@ -36,10 +36,12 @@ abstract class IdpMiddleware {
 
                 $roles = $this->createRoleArray($userJson->roles);
 
+                $attributes = $this->createAttributeArray($userJson->attributes);
+
                 $permissions = $this->retrievePermissions($userJson->id, $roles);
 
                 $user = ZUser::create($userJson->id, $userJson->username, $userJson->email, $token, $userJson->is_verified, $userJson->name,
-                    $userJson->surname, $userJson->is_employee, $userJson->created_at, $roles, $permissions);
+                    $userJson->surname, $userJson->is_employee, $userJson->created_at, $roles, $permissions, $attributes);
 
                 $this->addExtraParametersToUser($user);
 
