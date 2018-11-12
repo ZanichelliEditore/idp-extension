@@ -14,6 +14,7 @@ use Closure;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Zanichelli\IdentityProvider\Models\ZUser;
 use Zanichelli\Models\ZTrait\ZUserBuilder;
 
@@ -28,7 +29,13 @@ abstract class IdpMiddleware {
             $token = $request->input('token');
 
             $client = new Client(['verify' => false]);
-            $response = $client->get(env('IDP_TOKEN_URL') . '?token=' . $token);
+
+            try {
+                $response = $client->get(env('IDP_TOKEN_URL') . '?token=' . $token);
+            } catch (\Exception $e){
+                Log::error($e->getMessage());
+                return redirect(env('IDP_URL') . '?redirect=' . $request->url());
+            }
 
             if($response->getStatusCode() == 200){
 
