@@ -1,101 +1,218 @@
-# Zanichelli packages
+# Zanichelli IDP Laravel packages
 
-## Come integrare la libreria
-### Step 1 - Creazione chiave OAuth
-Andare su bitbucket.org, cliccare sull'immagine del profilo in basso a sinistra e andare su Bitbucket settings. Successivamente cliccare sulla voce OAuth 
-e aggiungere un consumer. Per aggiungere un comsumer � necessario specificare le seguenti voci:
+## How to integrate library in your project
 
-  * Name (Nome a piacere)
-  * Callback URL (URL fittizio esempio: http://www.example.com)
-  * Nelle permissions selezionare nei Projects il permesso di sola lettura
+### Step 1 - OAuth key creation
 
-Salvando il consumer si vanno a generare una Key e una Secret Key, che saranno richieste per il download della libreria.
+Login into [Bitbucket](https://bitbucket.org), click on your badge (bottom-left), choose "Bitbucket settings" and then "OAuth";
+To add a consumer click on "Create consumer" and fill following infos:
 
-### Step 2 - Aggiungere la dipendenza al composer.json
-Per aggiungere la libreria � necessario effettuare le seguenti modifiche al file composer.json:
+* Name (choose one)
+* Callback URL (add a fake url like http://www.example.com)
+* On permission boxes, select "Read only" on "Projects"
+A couple of consumer keys (Key and Secret) where generated when save the consumer.
 
-  * Aggiungere **"zanichelli/zanichelli-idp": "dev-master"** nei require
-  * Aggiungere sotto autoload -> classmap la riga **"vendor/zanichelli"**
+Keep in mind this key for further use.
 
-### Step 3 - Eseguire il composer
-Entrare dentro un CMD, posizionarsi nella root del progetto in cui si trova il file composer.json ed eseguire il comando **composer update**. Durante 
-l'esecuzione vengono richiesti i parametri che abbiamo generato nello Step 1.
-**N.B.** A volte potrebbe essere richiesto un token; in questo caso cliccate invio e ignorate l'errore visualizzato.
+### Step 2 - Add dependency on `composer.json`
 
-## Settings Envirorment (IDP)
-Nel file di envirorment **.env** � necessario aggiungere tre variabili obbligatorie che gestiscono il login con l'IDP attraverso il middleware IDP:
+Add this infos before `'require'` array :
 
-  * IDP_URL=https://idp.zanichelli.it/loginForm
-  * IDP_TOKEN_URL=https://idp.zanichelli.it/v1/loginWithToken
-  * IDP_LOGOUT_URL=https://idp.zanichelli.it/v1/logout
+```php
+    "repositories": [
+        {
+            "type": "git-bitbucket",
+            "url": "https://bitbucket.org/zanichelli/zanichelli-packages"
+        }
+    ],
+```
 
-Per chi volesse gestire il login manualmente con una View custom della propria applicazione, senza passare dalla form dell'IDP, deve aggiungere 
-anche la seguente variabile:
+Add this line to `'require'` array:
 
-  * IDP_LOGIN_URL=https://idp.zanichelli.it/v1/login
+```php
+    "zanichelli/zanichelli-idp": "dev-master"
+```
 
-## Implementazione del Middleware IDP
-Nella cartella App\Http\Middleware aggiungere una classe che estende **IdpMiddleware** (namespace Zanichelli\IdentityProvider\Middleware) presente 
-nella libreria. La classe dovr� implementare due metodi astratti:
+Add this line to `'classmap'` array:
 
-  * **retrievePermissions**: questo metodo prende in ingresso l'id dell'utente e l'array dei ruoli che appartengono ad esso. 
-    Nel corpo del metodo si dovranno recuperare i permessi dell'utente in base ai suoi ruoli. Il metodo, infine, deve ritornare un array 
-    di permessi (array di stringhe).
-  * **addExtraParametersToUser**: il metodo prende in ingresso un'istanza di un utente, in cui � possibile aggiungere campi 
-    extra. Esempio, se il mio utete deve contenere il codice funzionario dovr� scrivere semplicemente $user->agentCode = 052.
-    
-## Modifica del AuthServiceProvider
-Nella classe **AuthServiceProvider**, presente nella cartella App\Http\Middleware, aggiungere dentro il metodo boot il seguente codice:
+```php
+    "vendor/zanichelli"
+```
 
-    Auth::provider('z-provider', function ($app, array $config){
-        return new ZAuthServiceProvider();
-    });
-    
-    Auth::extend('z-session', function ($app, $name, array $config){
-        return ZGuard::create($this->app['session.store'], Auth::createUserProvider($config['provider']));
-    });
-    
-La prima funzione crea un nuovo driver la l'AuthServiceProvider con id **z-provider**, mentre la seconda funzione crea un driver per una nuova guardia con
-id **z-session**. Il passo successivo � quello di modificare le configurazioni dell'applicazione in modo da utilizzare i driver creati.
+### Step 3 - Run composer update
 
-## Modifica del file config/auth.php
-Nel file di configurazione dobbiamo creare una nuova guardia e un nuovo provider che utilizzino i nuovi driver. Per semplificare le cose i nomi della
-guardia e del provider sono gli stessi a quelli dati ai driver creati precedentemente.
+Go to a prompt or a terminal and cd into project directory;
+Then run `composer update`
+During the execution composer ask for consumer key and secret generated above.
+**Note:** if a token is request please ignore pressing enter giving nothing.
 
-Come prima cosa creaiamo una nuova guardia, aggiungendo all'array di guards il seguente valore:
+### Step 4 - .env file
 
+Add this lines at bottom of your .env file:
+
+```
+  IDP_URL=https://idp.zanichelli.it/loginForm
+  IDP_TOKEN_URL=https://idp.zanichelli.it/v1/loginWithToken
+  IDP_LOGOUT_URL=https://idp.zanichelli.it/v1/logout
+```
+
+If you need to use your own login form (instead of the IDP one), please add this line too:
+
+```
+  IDP_LOGIN_URL=https://idp.zanichelli.it/v1/login
+```
+
+### Step 5 - Adding IDP middleware 
+
+Open your project folder and go to `App\Http\Middleware` folder, then add a class named `IdpMiddleware` that exetend `IDP`
+Class must implement following methods:
+
+* `retrievePermissions`: this method take userId and roles array as input, here role-based permissions must be retrieved to output an array of strings with permissions;
+  
+* `addExtraParametersToUser`: this method allow you to add extra parameters to the user object given as input.
+
+for a basic use, class source code smell like the following:
+
+```php
+  namespace App\Http\Middleware;
+
+  use Closure;
+  use App\Grant;
+  use Zanichelli\IdentityProvider\Models\ZUser;
+  use Zanichelli\IdentityProvider\Middleware\IdpMiddleware as IDP;
+
+  class IdpMiddleware extends IDP {
+      /**
+      * Returns the array with permissions
+      *
+      * @param $userId
+      * @param array $roles
+      * @return array
+      */
+      protected function retrievePermissions($userId, array $roles)
+      {
+          $permissions = [];
+          foreach($roles as $role){
+              $permission = Grant::where('role_id', $role->roleId)
+                                      ->where('department_id', $role->departmentId)
+                                      ->pluck('grant')->toArray();
+              $permissions = array_merge($permissions, $permission);
+          }
+          return $permissions;
+      }
+      /**
+      * Returns a ZUser after adding extra parameters. Otherwise return $user
+      *
+      * @param $user
+      * @return ZUser
+      */
+      protected function addExtraParametersToUser(ZUser &$user){
+        //
+      }
+  }
+
+```
+After class creation, add in `kernel.php` file the new middleware class in `'$routeMiddleware'` array:
+
+```php
+  'idp' => \App\Http\Middleware\IdpMiddleware::class,
+```
+
+### Step 6 - AuthServiceProvider
+
+Add in `AuthServiceProvicer` class, on `App\Http\Middleware` folder, following uses:
+
+```php
+  use Illuminate\Support\Facades\Auth;
+  use Zanichelli\IdentityProvider\Guards\ZGuard;
+  use Zanichelli\IdentityProvider\Providers\ZAuthServiceProvider;
+```
+
+And the following code to `boot()` method:
+
+```php
+  Auth::provider('z-provider', function ($app, array $config){
+      return new ZAuthServiceProvider();
+   });
+
+  Auth::extend('z-session', function ($app, $name, array $config){
+    return ZGuard::create($this->app['session.store'], Auth::createUserProvider($config['provider']));
+  });
+```
+
+### Step 7 - auth.php editing
+
+Edit `config/auth.php` as follow:
+
+* In `'defaults'` array change value of `'guard'` from `'web'` to `'z-session'`
+
+* Add new guards into `'guards'` array in `config/auth.php` file:
+  
+  ```php
     'z-session' => [
         'driver' => 'z-session',
-        'provider => 'z-provider'
+        'provider' => 'z-provider'
     ]
-    
-Una volta  creata questa guardia, la dobbiamo impostare come quella di default. Quindi, andiamo nell'array **defaults** e cambiamo il valore di **guard** in
-**z-session**. Successivamente andiamo ad aggiungere all'array **providers** il seguente valore:
+  ```
 
+* Add new provider into `'providers'` array after `'users'`:
+  
+  ```php
     'z-provider' => [
         'driver' => 'z-provider'
     ]
-    
+  ```
+
+### Step 8 - create a Grant model
+
+Go to a prompt or a terminal and cd into project directory;
+Then run `php artisan make:model Grant`;
+After that add `protected $timestamps = false;` to your brand new class;
+
+### Step 9 - create a migration for grants table
+
+Go to a prompt or a terminal and cd into project directory;
+Then run `php artisan make:migration create_grants_table`;
+after that in `up()` function update the code as follow:
+
+```php
+  public function up()
+  {
+      Schema::create('grants', function (Blueprint $table) {
+          $table->integer('role_id');
+          $table->integer('department_id')->nullable();
+          $table->text('grant');
+      });
+  }
+```
+
+### Step 10 - run migrations
+
+Go to a prompt or a terminal and cd into project directory;
+Then run `php artisan migrate` to upgrade your database schema 
+with new migration created above
+
+### Final step - protect your routes
+
+Add to your route file (tipically `web.php`) the new middleware `idp`; code smells like this:
+
+```php
+  Route::group(['middleware'=>'idp'],function(){
+    Route::get('/', function(){
+      return view('home');
+    }
+  });
+```
+
 # Basics
-Con queste modifiche � possibile utilizzare alcune funzionalit� di Laravel per la gestione degli utenti autenticati. La classe di utilit� di Laravel che 
-ha il compito di gestire gli utenti � **Auth**. Questa classe permette di accedere ai seguenti metodi Facades:
 
-  * **Auth::check()** ritorna true se c'� un utente loggato, altrimenti false
-  * **Auth::guest()** ritorna true se NON c'� un utente loggato, altrimenti false
-  * **Auth::user()** ritorna un'istanza di un utente (classe ZUser) se loggato, altrimenti null 
-  * **Auth::id()** ritorna l'id dell'utente se loggato, altrimenti null
-  * **Auth::setUser($user)** imposta l'utente loggato nella session
-  * **Auth::attempt($credentials, $remember)** effettua il login con l'IDP senza passare per la form dell'IDP; ritorna true se andato a buon fine, altrimenti false
-  * **Auth::logout()** effettua il logout dell'utente e lo cancella dalla sessione; ritorna true se andato a buon fine, altrimenti false
-    
+With this integration you could use some Laravel's feature that allows to handle users and their authentication.
+`Auth` is authtentication class that Laravel ships for this purpose and allow access to following methods:
 
-
-
-
-
-
-
-
-
-
-
+* `Auth::check()`: returns `true` if a user is authenticated, `false` otherwise
+* `Auth::guest()`: returns `true` if a user is guest, `false` otherwise
+* `Auth::user()`: returns a `ZUser` class instance, `null` otherwise
+* `Auth::id()`: returns `userId` if authtenticated, `null` otherwise
+* `Auth::setUser($ZUser)`: sets a `Zuser` in session
+* `Auth::attempt($credentials, $remember)`: try to login with IDP without using the login form, if success returns `true`, otherwise `false`
+* `Auth::logout()`: logout a user, returns `true` or `false`
