@@ -12,6 +12,7 @@ namespace Zanichelli\IdentityProvider\Providers;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Auth\UserProvider;
 use Zanichelli\IdentityProvider\Models\ZUser;
 use Zanichelli\Models\ZTrait\ZUserBuilder;
@@ -127,7 +128,16 @@ class ZAuthServiceProvider implements UserProvider {
                 return false;
             }
 
-        } catch (Exception $e){
+        } catch (RequestException $e){
+            if (!$e->hasResponse()) {
+                return false;
+            }
+
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 403) {
+                return true;
+            }
+
             return false;
         }
 
