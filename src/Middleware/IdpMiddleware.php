@@ -31,7 +31,11 @@ abstract class IdpMiddleware {
             $client = new Client(['verify' => false]);
 
             try {
-                $response = $client->get(env('IDP_TOKEN_URL') . '?token=' . $token);
+                $response = $client->get(env('IDP_TOKEN_URL'), [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token
+                    ]
+                ]);
             } catch (\Exception $e){
                 Log::error($e->getMessage());
                 return redirect(env('IDP_URL') . '?redirect=' . $request->url());
