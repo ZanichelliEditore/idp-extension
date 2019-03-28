@@ -120,6 +120,7 @@ class ZAuthServiceProvider implements UserProvider {
         try {
             $response = $client->get(env('IDP_LOGOUT_URL'), [
                 'headers' => [
+                    'Accept' => 'application/json',
                     'Authorization' => 'Bearer ' . $token
                 ]
             ]);
