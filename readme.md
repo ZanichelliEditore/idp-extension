@@ -32,6 +32,7 @@ Add this line to `'require'` array:
 ```php
     "zanichelli/zanichelli-idp": "dev-master"
 ```
+**`Note:`you should use tag instead of branch-name (e.g. *"zanichelli/zanichelli-idp": v1.0.0* )**
 
 Add this line to `'classmap'` array:
 
@@ -52,14 +53,14 @@ Add this lines at bottom of your .env file:
 
 ```
   IDP_URL=https://idp.zanichelli.it/loginForm
-  IDP_TOKEN_URL=https://idp.zanichelli.it/v1/loginWithToken
+  IDP_TOKEN_URL=https://idp.zanichelli.it/v1/user
   IDP_LOGOUT_URL=https://idp.zanichelli.it/v1/logout
 ```
 
 If you need to use your own login form (instead of the IDP one), please add this line too:
 
 ```
-  IDP_LOGIN_URL=https://idp.zanichelli.it/v1/login
+  IDP_LOGIN_URL=https://idp.zanichelli.it/v2/login
 ```
 
 ### Step 5 - Adding IDP middleware 
@@ -179,6 +180,7 @@ after that in `up()` function update the code as follow:
   public function up()
   {
       Schema::create('grants', function (Blueprint $table) {
+          $table->increments('id');
           $table->integer('role_id');
           $table->integer('department_id')->nullable();
           $table->text('grant');
