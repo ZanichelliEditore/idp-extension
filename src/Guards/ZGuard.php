@@ -211,15 +211,10 @@ class ZGuard implements Guard, StatefulGuard
     /**
      * Log the user out of the application.
      *
-     * @return bool
+     * @return Redirect
      */
     public function logout()
     {
-
-        if (!$this->provider instanceof ZAuthServiceProvider) {
-            return false;
-        }
-
         if (!$this->user) {
             $this->user = $this->session->get('user');
         }
@@ -238,6 +233,8 @@ class ZGuard implements Guard, StatefulGuard
             ]));
         }
 
-        return false;
+        return redirect(env('IDP_URL') . '?' . http_build_query([
+            'redirect' => env('APP_URL')
+        ]));
     }
 }
