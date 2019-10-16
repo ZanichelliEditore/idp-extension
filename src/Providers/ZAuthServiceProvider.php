@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: andreadecastri
@@ -18,11 +19,13 @@ use Zanichelli\IdentityProvider\Models\ZUser;
 use Zanichelli\Models\ZTrait\ZUserBuilder;
 
 
-class ZAuthServiceProvider implements UserProvider {
+class ZAuthServiceProvider implements UserProvider
+{
 
     use ZUserBuilder;
 
-    public function __construct(){
+    public function __construct()
+    {
         // Do nothing
     }
 
@@ -32,7 +35,8 @@ class ZAuthServiceProvider implements UserProvider {
      * @param  mixed $identifier
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveById($identifier){
+    public function retrieveById($identifier)
+    {
         return null;
     }
 
@@ -43,7 +47,8 @@ class ZAuthServiceProvider implements UserProvider {
      * @param  string $token
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByToken($identifier, $token){
+    public function retrieveByToken($identifier, $token)
+    {
         return null;
     }
 
@@ -54,7 +59,8 @@ class ZAuthServiceProvider implements UserProvider {
      * @param  string $token
      * @return void
      */
-    public function updateRememberToken(\Illuminate\Contracts\Auth\Authenticatable $user, $token){
+    public function updateRememberToken(\Illuminate\Contracts\Auth\Authenticatable $user, $token)
+    {
         // Do nothing
     }
 
@@ -64,9 +70,10 @@ class ZAuthServiceProvider implements UserProvider {
      * @param  array $credentials
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByCredentials(array $credentials){
+    public function retrieveByCredentials(array $credentials)
+    {
 
-        if(empty($credentials) || empty($credentials['username']) || empty($credentials['password'])){
+        if (empty($credentials) || empty($credentials['username']) || empty($credentials['password'])) {
             return null;
         }
 
@@ -83,7 +90,7 @@ class ZAuthServiceProvider implements UserProvider {
                 ]
             ]);
 
-            if($response->getStatusCode() !== 200){
+            if ($response->getStatusCode() !== 200) {
                 return null;
             }
 
@@ -94,13 +101,21 @@ class ZAuthServiceProvider implements UserProvider {
 
             $roles = $this->createRoleArray($user->roles);
 
-            return ZUser::create($user->id, $user->username, $user->email, $token, $user->is_verified, $user->name,
-                $user->surname, $user->is_employee, $user->created_at, $roles);
-
-        } catch (Exception $e){
+            return ZUser::create(
+                $user->id,
+                $user->username,
+                $user->email,
+                $token,
+                $user->is_verified,
+                $user->name,
+                $user->surname,
+                $user->is_employee,
+                $user->created_at,
+                $roles
+            );
+        } catch (Exception $e) {
             return null;
         }
-
     }
 
     /**
@@ -110,11 +125,13 @@ class ZAuthServiceProvider implements UserProvider {
      * @param  array $credentials
      * @return bool
      */
-    public function validateCredentials(\Illuminate\Contracts\Auth\Authenticatable $user, array $credentials){
+    public function validateCredentials(\Illuminate\Contracts\Auth\Authenticatable $user, array $credentials)
+    {
         return false;
     }
 
-    public function logout($token){
+    public function logout($token)
+    {
         $client = new Client();
 
         try {
@@ -125,11 +142,10 @@ class ZAuthServiceProvider implements UserProvider {
                 ]
             ]);
 
-            if($response->getStatusCode() !== 200){
+            if ($response->getStatusCode() !== 200) {
                 return false;
             }
-
-        } catch (RequestException $e){
+        } catch (RequestException $e) {
             if (!$e->hasResponse()) {
                 return false;
             }
@@ -144,5 +160,4 @@ class ZAuthServiceProvider implements UserProvider {
 
         return true;
     }
-
 }

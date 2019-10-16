@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: andreadecastri
@@ -18,7 +19,8 @@ use Illuminate\Contracts\Session\Session;
 use Zanichelli\IdentityProvider\Providers\ZAuthServiceProvider;
 
 
-class ZGuard implements Guard, StatefulGuard {
+class ZGuard implements Guard, StatefulGuard
+{
 
     private $session;
 
@@ -27,7 +29,8 @@ class ZGuard implements Guard, StatefulGuard {
     /** @var ZAuthServiceProvider  */
     private $provider;
 
-    private function __construct(Session $session, UserProvider $provider){
+    private function __construct(Session $session, UserProvider $provider)
+    {
         $this->session = $session;
         $this->provider = $provider;
     }
@@ -39,7 +42,8 @@ class ZGuard implements Guard, StatefulGuard {
      * @param UserProvider $provider
      * @return ZGuard
      */
-    public static function create(Session $session, UserProvider $provider){
+    public static function create(Session $session, UserProvider $provider)
+    {
         return new self($session, $provider);
     }
 
@@ -48,7 +52,8 @@ class ZGuard implements Guard, StatefulGuard {
      *
      * @return bool
      */
-    public function check(){
+    public function check()
+    {
         return $this->session->exists('user');
     }
 
@@ -57,7 +62,8 @@ class ZGuard implements Guard, StatefulGuard {
      *
      * @return bool
      */
-    public function guest(){
+    public function guest()
+    {
         return !$this->session->exists('user');
     }
 
@@ -66,9 +72,10 @@ class ZGuard implements Guard, StatefulGuard {
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function user(){
+    public function user()
+    {
 
-        if($this->user){
+        if ($this->user) {
             return $this->user;
         }
 
@@ -80,15 +87,16 @@ class ZGuard implements Guard, StatefulGuard {
      *
      * @return int|null
      */
-    public function id(){
+    public function id()
+    {
 
-        if($this->user){
+        if ($this->user) {
             return $this->user->id;
         }
 
         $this->user = $this->session->get('user');
 
-        if($this->user){
+        if ($this->user) {
             return $this->user->id;
         }
 
@@ -101,7 +109,8 @@ class ZGuard implements Guard, StatefulGuard {
      * @param  array $credentials
      * @return bool
      */
-    public function validate(array $credentials = []){
+    public function validate(array $credentials = [])
+    {
         return false;
     }
 
@@ -111,7 +120,8 @@ class ZGuard implements Guard, StatefulGuard {
      * @param  \Illuminate\Contracts\Auth\Authenticatable $user
      * @return void
      */
-    public function setUser(Authenticatable $user){
+    public function setUser(Authenticatable $user)
+    {
 
         $this->session->put('user', $user);
 
@@ -125,11 +135,12 @@ class ZGuard implements Guard, StatefulGuard {
      * @param  bool $remember
      * @return bool
      */
-    public function attempt(array $credentials = [], $remember = false){
+    public function attempt(array $credentials = [], $remember = false)
+    {
 
         $user = $this->provider->retrieveByCredentials($credentials);
 
-        if(!is_null($user)){
+        if (!is_null($user)) {
 
             $this->session->put('user', $user);
 
@@ -147,7 +158,8 @@ class ZGuard implements Guard, StatefulGuard {
      * @param  array $credentials
      * @return bool
      */
-    public function once(array $credentials = []){
+    public function once(array $credentials = [])
+    {
         return false;
     }
 
@@ -158,7 +170,8 @@ class ZGuard implements Guard, StatefulGuard {
      * @param  bool $remember
      * @return void
      */
-    public function login(Authenticatable $user, $remember = false){
+    public function login(Authenticatable $user, $remember = false)
+    {
         // Do nothing
     }
 
@@ -169,7 +182,8 @@ class ZGuard implements Guard, StatefulGuard {
      * @param  bool $remember
      * @return \Illuminate\Contracts\Auth\Authenticatable
      */
-    public function loginUsingId($id, $remember = false){
+    public function loginUsingId($id, $remember = false)
+    {
         return null;
     }
 
@@ -179,7 +193,8 @@ class ZGuard implements Guard, StatefulGuard {
      * @param  mixed $id
      * @return bool
      */
-    public function onceUsingId($id){
+    public function onceUsingId($id)
+    {
         return false;
     }
 
@@ -188,35 +203,38 @@ class ZGuard implements Guard, StatefulGuard {
      *
      * @return bool
      */
-    public function viaRemember(){
+    public function viaRemember()
+    {
         return false;
     }
 
     /**
      * Log the user out of the application.
      *
-     * @return bool
+     * @return Redirect
      */
-    public function logout(){
-
-        if(!$this->provider instanceof ZAuthServiceProvider){
-            return false;
-        }
-
-        if(!$this->user){
+    public function logout()
+    {
+        if (!$this->user) {
             $this->user = $this->session->get('user');
         }
 
-        if($this->user && $this->provider->logout($this->user->token)){
+        if ($this->user) {
+
+            $token = $this->user->token;
 
             $this->user = null;
 
             $this->session->flush();
 
-            return true;
+            return redirect(env('IDP_LOGOUT_URL') . '?' . http_build_query([
+                'token' => $token,
+                'redirect' => env('APP_URL')
+            ]));
         }
 
-        return false;
+        return redirect(env('IDP_URL') . '?' . http_build_query([
+            'redirect' => env('APP_URL')
+        ]));
     }
-
 }
