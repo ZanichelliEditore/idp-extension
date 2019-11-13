@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80ea80c60f92934546d004ff39c3d62b",
+    "content-hash": "820ad9a3b4f5827e37c1a736d8ef6f70",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -479,43 +479,43 @@
         },
         {
             "name": "laravel/framework",
-            "version": "5.8.x-dev",
+            "version": "6.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "2e6907851ae91685e4313b1258035bcc73bf1df1"
+                "reference": "50d7c9560547adc2fda3739557342d6a2be3243b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/2e6907851ae91685e4313b1258035bcc73bf1df1",
-                "reference": "2e6907851ae91685e4313b1258035bcc73bf1df1",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/50d7c9560547adc2fda3739557342d6a2be3243b",
+                "reference": "50d7c9560547adc2fda3739557342d6a2be3243b",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "^1.1",
                 "dragonmantank/cron-expression": "^2.0",
-                "egulias/email-validator": "^2.0",
+                "egulias/email-validator": "^2.1.10",
                 "erusev/parsedown": "^1.7",
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "league/flysystem": "^1.0.8",
-                "monolog/monolog": "^1.12",
-                "nesbot/carbon": "^1.26.3 || ^2.0",
+                "monolog/monolog": "^1.12|^2.0",
+                "nesbot/carbon": "^2.0",
                 "opis/closure": "^3.1",
-                "php": "^7.1.3",
+                "php": "^7.2",
                 "psr/container": "^1.0",
                 "psr/simple-cache": "^1.0",
                 "ramsey/uuid": "^3.7",
                 "swiftmailer/swiftmailer": "^6.0",
-                "symfony/console": "^4.2",
-                "symfony/debug": "^4.2",
-                "symfony/finder": "^4.2",
-                "symfony/http-foundation": "^4.2",
-                "symfony/http-kernel": "^4.2",
-                "symfony/process": "^4.2",
-                "symfony/routing": "^4.2",
-                "symfony/var-dumper": "^4.2",
+                "symfony/console": "^4.3.4",
+                "symfony/debug": "^4.3.4",
+                "symfony/finder": "^4.3.4",
+                "symfony/http-foundation": "^4.3.4",
+                "symfony/http-kernel": "^4.3.4",
+                "symfony/process": "^4.3.4",
+                "symfony/routing": "^4.3.4",
+                "symfony/var-dumper": "^4.3.4",
                 "tijsverkoyen/css-to-inline-styles": "^2.2.1",
                 "vlucas/phpdotenv": "^3.3"
             },
@@ -555,47 +555,45 @@
             "require-dev": {
                 "aws/aws-sdk-php": "^3.0",
                 "doctrine/dbal": "^2.6",
-                "filp/whoops": "^2.1.4",
+                "filp/whoops": "^2.4",
                 "guzzlehttp/guzzle": "^6.3",
                 "league/flysystem-cached-adapter": "^1.0",
-                "mockery/mockery": "^1.0",
+                "mockery/mockery": "^1.2.3",
                 "moontoast/math": "^1.1",
-                "orchestra/testbench-core": "3.8.*",
+                "orchestra/testbench-core": "^4.0",
                 "pda/pheanstalk": "^4.0",
-                "phpunit/phpunit": "^7.5|^8.0",
+                "phpunit/phpunit": "^8.3",
                 "predis/predis": "^1.1.1",
-                "symfony/css-selector": "^4.2",
-                "symfony/dom-crawler": "^4.2",
+                "symfony/cache": "^4.3",
                 "true/punycode": "^2.1"
             },
             "suggest": {
-                "aws/aws-sdk-php": "Required to use the SQS queue driver and SES mail driver (^3.0).",
+                "aws/aws-sdk-php": "Required to use the SQS queue driver, DynamoDb failed job storage and SES mail driver (^3.0).",
                 "doctrine/dbal": "Required to rename columns and drop SQLite columns (^2.6).",
                 "ext-gd": "Required to use Illuminate\\Http\\Testing\\FileFactory::image().",
+                "ext-memcached": "Required to use the memcache cache driver.",
                 "ext-pcntl": "Required to use all features of the queue worker.",
                 "ext-posix": "Required to use all features of the queue worker.",
-                "filp/whoops": "Required for friendly error pages in development (^2.1.4).",
+                "ext-redis": "Required to use the Redis cache and queue drivers.",
+                "filp/whoops": "Required for friendly error pages in development (^2.4).",
                 "fzaninotto/faker": "Required to use the eloquent factory builder (^1.4).",
-                "guzzlehttp/guzzle": "Required to use the Mailgun and Mandrill mail drivers and the ping methods on schedules (^6.0).",
+                "guzzlehttp/guzzle": "Required to use the Mailgun mail driver and the ping methods on schedules (^6.0).",
                 "laravel/tinker": "Required to use the tinker console command (^1.0).",
                 "league/flysystem-aws-s3-v3": "Required to use the Flysystem S3 driver (^1.0).",
                 "league/flysystem-cached-adapter": "Required to use the Flysystem cache (^1.0).",
-                "league/flysystem-rackspace": "Required to use the Flysystem Rackspace driver (^1.0).",
                 "league/flysystem-sftp": "Required to use the Flysystem SFTP driver (^1.0).",
                 "moontoast/math": "Required to use ordered UUIDs (^1.1).",
-                "nexmo/client": "Required to use the Nexmo transport (^1.0).",
                 "pda/pheanstalk": "Required to use the beanstalk queue driver (^4.0).",
-                "predis/predis": "Required to use the redis cache and queue drivers (^1.0).",
-                "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^3.0).",
-                "symfony/css-selector": "Required to use some of the crawler integration testing tools (^4.2).",
-                "symfony/dom-crawler": "Required to use most of the crawler integration testing tools (^4.2).",
-                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^1.1).",
+                "psr/http-message": "Required to allow Storage::put to accept a StreamInterface (^1.0)",
+                "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^4.0).",
+                "symfony/cache": "Required to PSR-6 cache bridge (^4.3.4).",
+                "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^1.2).",
                 "wildbit/swiftmailer-postmark": "Required to use Postmark mail driver (^3.0)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.8-dev"
+                    "dev-master": "6.x-dev"
                 }
             },
             "autoload": {
@@ -623,7 +621,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2019-11-01T11:43:45+00:00"
+            "time": "2019-11-12T18:26:13+00:00"
         },
         {
             "name": "league/flysystem",
@@ -711,21 +709,21 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "65f1f304d4e68759970a5c663ad2ae46faa47013"
+                "reference": "9776fa1d548716490a7d49ffbb608e5c2dda589b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/65f1f304d4e68759970a5c663ad2ae46faa47013",
-                "reference": "65f1f304d4e68759970a5c663ad2ae46faa47013",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/9776fa1d548716490a7d49ffbb608e5c2dda589b",
+                "reference": "9776fa1d548716490a7d49ffbb608e5c2dda589b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "psr/log": "~1.0"
+                "php": "^7.2",
+                "psr/log": "^1.0.1"
             },
             "provide": {
                 "psr/log-implementation": "1.0.0"
@@ -733,33 +731,36 @@
             "require-dev": {
                 "aws/aws-sdk-php": "^2.4.9 || ^3.0",
                 "doctrine/couchdb": "~1.0@dev",
-                "graylog2/gelf-php": "~1.0",
-                "jakub-onderka/php-parallel-lint": "0.9",
+                "elasticsearch/elasticsearch": "^6.0",
+                "graylog2/gelf-php": "^1.4.2",
+                "jakub-onderka/php-parallel-lint": "^0.9",
                 "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
-                "phpunit/phpunit": "~4.5",
-                "phpunit/phpunit-mock-objects": "2.3.0",
+                "phpspec/prophecy": "^1.6.1",
+                "phpunit/phpunit": "^8.3",
+                "predis/predis": "^1.1",
+                "rollbar/rollbar": "^1.3",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "sentry/sentry": "^0.13",
                 "swiftmailer/swiftmailer": "^5.3|^6.0"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
                 "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "elasticsearch/elasticsearch": "Allow sending log messages to an Elasticsearch server via official client",
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-                "ext-mongo": "Allow sending log messages to a MongoDB server",
+                "ext-mbstring": "Allow to work properly with unicode symbols",
+                "ext-mongodb": "Allow sending log messages to a MongoDB server (via driver)",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
                 "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "sentry/sentry": "Allow sending log messages to a Sentry server"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -785,7 +786,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2019-11-11T17:21:38+00:00"
+            "time": "2019-11-12T20:52:37+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1115,12 +1116,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801"
+                "reference": "5628725d0e4d687e29575eb41f9d5ee7de33a84c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
-                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/5628725d0e4d687e29575eb41f9d5ee7de33a84c",
+                "reference": "5628725d0e4d687e29575eb41f9d5ee7de33a84c",
                 "shasum": ""
             },
             "require": {
@@ -1154,7 +1155,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2019-11-01T11:05:21+00:00"
+            "time": "2019-11-12T16:45:05+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -1580,12 +1581,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/error-handler.git",
-                "reference": "3a13b0ba0d02a5e52c7b824bebf082b9145f87d3"
+                "reference": "ee9121938fea18b0898a39aa5307ae3657b21abc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/error-handler/zipball/3a13b0ba0d02a5e52c7b824bebf082b9145f87d3",
-                "reference": "3a13b0ba0d02a5e52c7b824bebf082b9145f87d3",
+                "url": "https://api.github.com/repos/symfony/error-handler/zipball/ee9121938fea18b0898a39aa5307ae3657b21abc",
+                "reference": "ee9121938fea18b0898a39aa5307ae3657b21abc",
                 "shasum": ""
             },
             "require": {
@@ -1628,7 +1629,7 @@
             ],
             "description": "Symfony ErrorHandler Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-12T11:21:15+00:00"
+            "time": "2019-11-12T17:18:47+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1868,12 +1869,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "0cc2d6bce06ae953156760475256a06a51ac2181"
+                "reference": "3d6c9421c608c68bc93f6925ea8abdea5773caa7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/0cc2d6bce06ae953156760475256a06a51ac2181",
-                "reference": "0cc2d6bce06ae953156760475256a06a51ac2181",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/3d6c9421c608c68bc93f6925ea8abdea5773caa7",
+                "reference": "3d6c9421c608c68bc93f6925ea8abdea5773caa7",
                 "shasum": ""
             },
             "require": {
@@ -1950,7 +1951,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-12T11:00:56+00:00"
+            "time": "2019-11-12T17:50:34+00:00"
         },
         {
             "name": "symfony/mime",
@@ -2420,12 +2421,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "0ac14b0d4e3298aee43b41cb902cac742ef464a0"
+                "reference": "99876ba2ac4fd8fa07db6b3cf3db2ab3aa0caa6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/0ac14b0d4e3298aee43b41cb902cac742ef464a0",
-                "reference": "0ac14b0d4e3298aee43b41cb902cac742ef464a0",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/99876ba2ac4fd8fa07db6b3cf3db2ab3aa0caa6a",
+                "reference": "99876ba2ac4fd8fa07db6b3cf3db2ab3aa0caa6a",
                 "shasum": ""
             },
             "require": {
@@ -2488,7 +2489,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2019-11-05T16:11:08+00:00"
+            "time": "2019-11-12T14:51:11+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -2554,12 +2555,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "5e9514d3994ed56afca7afb1c8f0fb2973592358"
+                "reference": "897fb68ee7933372517b551d6f08c6d4bb0b8c40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/5e9514d3994ed56afca7afb1c8f0fb2973592358",
-                "reference": "5e9514d3994ed56afca7afb1c8f0fb2973592358",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/897fb68ee7933372517b551d6f08c6d4bb0b8c40",
+                "reference": "897fb68ee7933372517b551d6f08c6d4bb0b8c40",
                 "shasum": ""
             },
             "require": {
@@ -2570,6 +2571,7 @@
             "conflict": {
                 "symfony/config": "<3.4",
                 "symfony/dependency-injection": "<3.4",
+                "symfony/http-kernel": "<4.4",
                 "symfony/yaml": "<3.4"
             },
             "provide": {
@@ -2581,10 +2583,9 @@
                 "symfony/console": "^3.4|^4.0|^5.0",
                 "symfony/dependency-injection": "^3.4|^4.0|^5.0",
                 "symfony/finder": "~2.8|~3.0|~4.0|^5.0",
-                "symfony/http-kernel": "^3.4|^4.0",
+                "symfony/http-kernel": "^4.4",
                 "symfony/intl": "^3.4|^4.0|^5.0",
                 "symfony/service-contracts": "^1.1.2|^2",
-                "symfony/var-dumper": "^3.4|^4.0|^5.0",
                 "symfony/yaml": "^3.4|^4.0|^5.0"
             },
             "suggest": {
@@ -2622,7 +2623,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-09T09:30:00+00:00"
+            "time": "2019-11-12T17:18:47+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -2687,12 +2688,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "c85ac5426a9cab42e750eaa357386734f05320e2"
+                "reference": "eade2890f8b0eeb279b6cf41b50a10007294490f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/c85ac5426a9cab42e750eaa357386734f05320e2",
-                "reference": "c85ac5426a9cab42e750eaa357386734f05320e2",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/eade2890f8b0eeb279b6cf41b50a10007294490f",
+                "reference": "eade2890f8b0eeb279b6cf41b50a10007294490f",
                 "shasum": ""
             },
             "require": {
@@ -2755,7 +2756,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2019-11-08T15:59:14+00:00"
+            "time": "2019-11-12T14:51:11+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -2870,8 +2871,6 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "php": "^7.1.3"
-    },
+    "platform": [],
     "platform-dev": []
 }
