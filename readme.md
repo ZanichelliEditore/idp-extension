@@ -33,7 +33,7 @@ Add this line to `'require'` array:
     "zanichelli/zanichelli-idp": "dev-master"
 ```
 
-**`Note:`you should use tag instead of branch-name (e.g. _"zanichelli/zanichelli-idp": v1.0.0_ )**
+**`Note:`you should use tag instead of branch-name (e.g. _"zanichelli/zanichelli-idp": v2.0.0_ )**
 
 Add this line to `'classmap'` array:
 
