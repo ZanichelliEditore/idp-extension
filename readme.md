@@ -7,10 +7,10 @@
 Login into [Bitbucket](https://bitbucket.org), click on your badge (bottom-left), choose "Bitbucket settings" and then "OAuth";
 To add a consumer click on "Create consumer" and fill following infos:
 
-* Name (choose one)
-* Callback URL (add a fake url like http://www.example.com)
-* On permission boxes, select "Read only" on "Projects"
-A couple of consumer keys (Key and Secret) where generated when save the consumer.
+- Name (choose one)
+- Callback URL (add a fake url like http://www.example.com)
+- On permission boxes, select "Read only" on "Projects"
+  A couple of consumer keys (Key and Secret) where generated when save the consumer.
 
 Keep in mind this key for further use.
 
@@ -32,7 +32,8 @@ Add this line to `'require'` array:
 ```php
     "zanichelli/zanichelli-idp": "dev-master"
 ```
-**`Note:`you should use tag instead of branch-name (e.g. *"zanichelli/zanichelli-idp": v1.0.0* )**
+
+**`Note:`you should use tag instead of branch-name (e.g. _"zanichelli/zanichelli-idp": v1.0.0_ )**
 
 Add this line to `'classmap'` array:
 
@@ -63,14 +64,14 @@ If you need to use your own login form (instead of the IDP one), please add this
   IDP_LOGIN_URL=https://idp.zanichelli.it/v2/login
 ```
 
-### Step 5 - Adding IDP middleware 
+### Step 5 - Adding IDP middleware
 
 Open your project folder and go to `App\Http\Middleware` folder, then add a class named `IdpMiddleware` that exetend `IDP`
 Class must implement following methods:
 
-* `retrievePermissions`: this method take userId and roles array as input, here role-based permissions must be retrieved to output an array of strings with permissions;
-  
-* `addExtraParametersToUser`: this method allow you to add extra parameters to the user object given as input.
+- `retrievePermissions`: this method take userId and roles array as input, here role-based permissions must be retrieved to output an array of strings with permissions;
+
+- `addExtraParametersToUser`: this method allow you to add extra parameters to the user object given as input.
 
 for a basic use, class source code smell like the following:
 
@@ -113,6 +114,7 @@ for a basic use, class source code smell like the following:
   }
 
 ```
+
 After class creation, add in `kernel.php` file the new middleware class in `'$routeMiddleware'` array:
 
 ```php
@@ -145,10 +147,10 @@ And the following code to `boot()` method:
 
 Edit `config/auth.php` as follow:
 
-* In `'defaults'` array change value of `'guard'` from `'web'` to `'z-session'`
+- In `'defaults'` array change value of `'guard'` from `'web'` to `'z-session'`
 
-* Add new guards into `'guards'` array in `config/auth.php` file:
-  
+- Add new guards into `'guards'` array in `config/auth.php` file:
+
   ```php
     'z-session' => [
         'driver' => 'z-session',
@@ -156,8 +158,8 @@ Edit `config/auth.php` as follow:
     ]
   ```
 
-* Add new provider into `'providers'` array after `'users'`:
-  
+- Add new provider into `'providers'` array after `'users'`:
+
   ```php
     'z-provider' => [
         'driver' => 'z-provider'
@@ -191,7 +193,7 @@ after that in `up()` function update the code as follow:
 ### Step 10 - run migrations
 
 Go to a prompt or a terminal and cd into project directory;
-Then run `php artisan migrate` to upgrade your database schema 
+Then run `php artisan migrate` to upgrade your database schema
 with new migration created above
 
 ### Final step - protect your routes
@@ -202,8 +204,35 @@ Add to your route file (tipically `web.php`) the new middleware `idp`; code smel
   Route::group(['middleware'=>'idp'],function(){
     Route::get('/', function(){
       return view('home');
-    }
+    });
   });
+```
+
+## Logout idp
+
+Create a logout route inside `web.php` file using a **_logout_** method inside the controller.
+Implement the code as follow:
+
+```php
+  Route::group(['middleware'=>'idp'],function(){
+    Route::get('logout',  'LoginController@logout');
+  });
+```
+
+Then define **`logout`**:
+
+```php
+use use Illuminate\Support\Facades\Auth;
+
+class LoginController extends Controller
+{
+  ...
+
+  public function logout()
+  {
+    return Auth::logout();
+  }
+}
 ```
 
 # Basics
@@ -211,10 +240,10 @@ Add to your route file (tipically `web.php`) the new middleware `idp`; code smel
 With this integration you could use some Laravel's feature that allows to handle users and their authentication.
 `Auth` is authtentication class that Laravel ships for this purpose and allow access to following methods:
 
-* `Auth::check()`: returns `true` if a user is authenticated, `false` otherwise
-* `Auth::guest()`: returns `true` if a user is guest, `false` otherwise
-* `Auth::user()`: returns a `ZUser` class instance, `null` otherwise
-* `Auth::id()`: returns `userId` if authtenticated, `null` otherwise
-* `Auth::setUser($ZUser)`: sets a `Zuser` in session
-* `Auth::attempt($credentials, $remember)`: try to login with IDP without using the login form, if success returns `true`, otherwise `false`
-* `Auth::logout()`: logout a user, returns `true` or `false`
+- `Auth::check()`: returns `true` if a user is authenticated, `false` otherwise
+- `Auth::guest()`: returns `true` if a user is guest, `false` otherwise
+- `Auth::user()`: returns a `ZUser` class instance, `null` otherwise
+- `Auth::id()`: returns `userId` if authtenticated, `null` otherwise
+- `Auth::setUser($ZUser)`: sets a `Zuser` in session
+- `Auth::attempt($credentials, $remember)`: try to login with IDP without using the login form, if success returns `true`, otherwise `false`
+- `Auth::logout()`: logout a user, returns `true` or `false`
