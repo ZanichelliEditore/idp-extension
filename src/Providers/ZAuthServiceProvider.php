@@ -1,23 +1,14 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: andreadecastri
- * Date: 27/09/18
- * Time: 10.10
- *
- * @author Andrea De Castri
- */
-
-namespace Zanichelli\IdentityProvider\Providers;
+namespace Zanichelli\IdpExtension\Providers;
 
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Auth\UserProvider;
-use Zanichelli\IdentityProvider\Models\ZUser;
-use Zanichelli\Models\ZTrait\ZUserBuilder;
-
+use Zanichelli\IdpExtension\Models\ZUser;
+use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class ZAuthServiceProvider implements UserProvider
 {
@@ -59,7 +50,7 @@ class ZAuthServiceProvider implements UserProvider
      * @param  string $token
      * @return void
      */
-    public function updateRememberToken(\Illuminate\Contracts\Auth\Authenticatable $user, $token)
+    public function updateRememberToken(Authenticatable $user, $token)
     {
         // Do nothing
     }

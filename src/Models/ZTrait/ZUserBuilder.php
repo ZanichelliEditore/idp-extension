@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andreadecastri
- * Date: 27/09/18
- * Time: 16.17
- */
 
-namespace Zanichelli\Models\ZTrait;
+namespace Zanichelli\IdpExtension\ZTrait;
 
 
-use Zanichelli\IdentityProvider\Models\ZRole;
-use Zanichelli\Models\ZAttribute;
+use Zanichelli\IdpExtension\Models\ZRole;
+use Zanichelli\IdpExtension\Models\ZAttribute;
 
 trait ZUserBuilder {
 

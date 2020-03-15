@@ -7,9 +7,22 @@
             "email": "developers@zanichelli.it"
         }
     ],
+    "require-dev": {
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^8.0",
+        "orchestra/testbench": "^3.8"
+    },
     "minimum-stability": "dev",
     "require": {
         "laravel/framework": "^5.6|^6",
         "guzzlehttp/guzzle": "~6.0"
-    }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zanichelli\\IdpExtension\\Providers\\IdpProvider"
+            ]
+        }
+    },
+    "license": "MIT"
 }

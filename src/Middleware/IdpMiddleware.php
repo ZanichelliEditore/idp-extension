@@ -1,22 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andreadecastri
- * Date: 26/09/18
- * Time: 16.16
- *
- * @author Andrea De Castri
- */
 
-namespace Zanichelli\IdentityProvider\Middleware;
+namespace Zanichelli\IdpExtension\Middleware;
 
 use Closure;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Zanichelli\IdentityProvider\Models\ZUser;
-use Zanichelli\Models\ZTrait\ZUserBuilder;
+use Zanichelli\IdpExtension\Models\ZUser;
+use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
 abstract class IdpMiddleware {
 
