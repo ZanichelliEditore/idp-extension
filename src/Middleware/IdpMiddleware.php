@@ -3,10 +3,11 @@
 namespace Zanichelli\IdpExtension\Middleware;
 
 use Closure;
+use App\Models\Grant;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Zanichelli\IdpExtension\Models\ZUser;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
@@ -67,8 +68,22 @@ abstract class IdpMiddleware {
      * @param array $roles
      * @return array
      */
-    protected abstract function retrievePermissions($userId, array $roles);
+    protected function retrievePermissions($userId, array $roles)
+    {
+        $permissions = [];
+        foreach ($roles as $role) {
+            $permission = Grant::where('role_id', $role->roleId)
+                ->where('department_id', null)
+                ->orWhere(function ($query) use ($role) {
+                    $query->where('department_id', $role->departmentId)
+                        ->where('role_id', $role->roleId);
+                })
+                ->pluck('grant')->toArray();
+            $permissions = array_merge($permissions, $permission);
+        }
 
+        return $permissions;
+    }
     /**
      * Returns a ZUser after adding extra parameters. Otherwise return $user
      *
