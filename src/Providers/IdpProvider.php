@@ -2,6 +2,9 @@
 
 namespace Zanichelli\IdpExtension\Providers;
 
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Session;
+
 class IdpProvider implements ServiceProvider
 {
     /**
@@ -16,6 +19,15 @@ class IdpProvider implements ServiceProvider
                 $this->app->refresh('request', $guard, 'setRequest');
             });
         });
+        Session::extend('idp-token', function ($app) {
+            $connection = $app['config']['session.connection'];
+            return new SessionWithTokenHandler(
+                $app['db']->connection($connection),
+                $app['config']['session.table'],
+                $app['config']['session.lifetime'],
+                $app
+            );
+        });
     }
 
     /**
@@ -26,19 +38,20 @@ class IdpProvider implements ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../database/migrations' => database_path('/migrations'),
-        ], 'database');
-    }
+            __DIR__ . '/../database/migrations/' => database_path('migrations'),
+        ], 'migrations');
+        $this->publishes([
+            __DIR__ . '/../config/idp-extension.php' => config_path('idp-extension.php'),
+        ], 'config');
 
-    /**
-     * Register Idp's migration files.
-     *
-     * @return void
-     */
-    protected function registerMigrations()
-    {
-        if (IdpExtension::$runsMigrations) {
-            return $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        }
+        Session::extend('idp-token', function ($app) {
+            $connection = $app['config']['session.connection'];
+            return new SessionWithTokenHandler(
+                $app['db']->connection($connection),
+                $app['config']['session.table'],
+                $app['config']['session.lifetime'],
+                $app
+            );
+        });
     }
 }
