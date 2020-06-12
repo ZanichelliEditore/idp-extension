@@ -1,6 +1,6 @@
 <?php
 
-namespace Zanichelli\IdpExtension\ZTrait;
+namespace Zanichelli\IdpExtension\Models\ZTrait;
 
 
 use Zanichelli\IdpExtension\Models\ZRole;
