@@ -1,5 +1,5 @@
 {
-    "name": "zanichelli/zanichelli-idp",
+    "name": "zanichelli/idp-extensions",
     "description": "Classes to interact with the Zanichelli identity provider",
     "authors": [
         {
