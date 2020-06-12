@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Zanichelli\IdpExtension\Models\ZUser;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
-abstract class IdpMiddleware {
+class IdpMiddleware {
 
     use ZUserBuilder;
 
@@ -47,7 +47,7 @@ abstract class IdpMiddleware {
                 $user = ZUser::create($userJson->id, $userJson->username, $userJson->email, $token, $userJson->is_verified, $userJson->name,
                     $userJson->surname, $userJson->is_employee, $userJson->created_at, $roles, $permissions, $attributes);
 
-                $this->addExtraParametersToUser($user);
+                // $this->addExtraParametersToUser($user);
 
                 Auth::setUser($user);
             }
@@ -84,11 +84,4 @@ abstract class IdpMiddleware {
 
         return $permissions;
     }
-    /**
-     * Returns a ZUser after adding extra parameters. Otherwise return $user
-     *
-     * @param $user
-     */
-    protected abstract function addExtraParametersToUser(ZUser &$user);
-
 }
