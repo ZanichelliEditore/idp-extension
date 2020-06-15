@@ -1,11 +1,11 @@
 <?php
 
-namespace Zanichelli\IdpExtension\Middleware;
+namespace Zanichelli\IdpExtension\Http\Middleware;
 
 use Closure;
 use Zanichelli\IdpExtension\Models\Grant;
 use Zanichelli\IdpExtension\Models\ZUser;
-use Zanichelli\IdpExtension\Middleware\IdpMiddleware as IDP;
+use Zanichelli\IdpExtension\Http\Middleware\IdpMiddleware as IDP;
 
 class IdpAuthMiddleware extends IDP
 {

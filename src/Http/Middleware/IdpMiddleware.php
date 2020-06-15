@@ -1,6 +1,6 @@
 <?php
 
-namespace Zanichelli\IdpExtension\Middleware;
+namespace Zanichelli\IdpExtension\Http\Middleware;
 
 use Closure;
 use App\Models\Grant;
