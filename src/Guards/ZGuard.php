@@ -219,10 +219,7 @@ class ZGuard implements Guard, StatefulGuard
 
             $this->session->flush();
 
-            return redirect(env('IDP_LOGOUT_URL') . '?' . http_build_query([
-                'token' => $token,
-                'redirect' => env('APP_URL')
-            ]));
+            $this->provider->logout($token);
         }
 
         return redirect(env('IDP_URL') . '?' . http_build_query([

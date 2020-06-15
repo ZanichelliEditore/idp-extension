@@ -5,6 +5,7 @@ namespace Zanichelli\IdpExtension\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Zanichelli\IdpExtension\Guards\ZGuard;
 
 class IdpProvider extends ServiceProvider
 {
