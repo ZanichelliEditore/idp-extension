@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Zanichelli\IdpExtension\Guards\ZGuard;
+use Illuminate\Support\Arr;
 
 class IdpProvider extends ServiceProvider
 {
