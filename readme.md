@@ -1,52 +1,15 @@
-# Zanichelli IDP Laravel packages
+# Zanichelli IDP Laravel Extension packages
 
-## How to integrate library in your project
+## How to integrate package in your project
 
-### Step 1 - OAuth key creation
+### Step 1 - Install by Composer
 
-Login into [Bitbucket](https://bitbucket.org), click on your badge (bottom-left), choose "Bitbucket settings" and then "OAuth";
-To add a consumer click on "Create consumer" and fill following infos:
-
-- Name (choose one)
-- Callback URL (add a fake url like http://www.example.com)
-- On permission boxes, select "Read only" on "Projects"
-  A couple of consumer keys (Key and Secret) where generated when save the consumer.
-
-Keep in mind this key for further use.
-
-### Step 2 - Add dependency on `composer.json`
-
-Add this infos before `'require'` array :
-
-```php
-    "repositories": [
-        {
-            "type": "git-bitbucket",
-            "url": "https://bitbucket.org/zanichelli/zanichelli-packages"
-        }
-    ],
+```bash
+   composer require zanichelli/idp-extensions
 ```
 
-Add this line to `'require'` array:
+**`Note:`you should use tag instead of branch-name (e.g. _"zanichelli/idp-extensions:dev-V1.0.0"_ )**
 
-```php
-    "zanichelli/zanichelli-idp": "dev-master"
-```
-
-**`Note:`you should use tag instead of branch-name (e.g. _"zanichelli/zanichelli-idp": v2.0.0_ )**
-
-Add this line to `'classmap'` array:
-
-```php
-    "vendor/zanichelli"
-```
-
-### Step 3 - Run composer update
-
-Go to a prompt or a terminal and cd into project directory;
-Then run `composer update`
-During the execution composer ask for consumer key and secret generated above.
-**Note:** if a token is request please ignore pressing enter giving nothing.
 
 ### Step 4 - .env file
 
@@ -61,59 +24,18 @@ Add this lines at bottom of your .env file:
 If you need to use your own login form (instead of the IDP one), please add this line too:
 
 ```
-  IDP_LOGIN_URL=https://idp.zanichelli.it/v2/login
+  IDP_LOGIN_URL=https://idp.zanichelli.it/v3/login
 ```
 
-### Step 5 - Adding IDP middleware
+### Step 5 - Extends IDP middleware
 
-Open your project folder and go to `App\Http\Middleware` folder, then add a class named `IdpMiddleware` that exetend `IDP`
+In order to edit retrive permissions or add extra parameter to user object you can extend default class IDP Middleware.
+
 Class must implement following methods:
 
 - `retrievePermissions`: this method take userId and roles array as input, here role-based permissions must be retrieved to output an array of strings with permissions;
 
 - `addExtraParametersToUser`: this method allow you to add extra parameters to the user object given as input.
-
-for a basic use, class source code smell like the following:
-
-```php
-  namespace App\Http\Middleware;
-
-  use Closure;
-  use App\Grant;
-  use Zanichelli\IdentityProvider\Models\ZUser;
-  use Zanichelli\IdentityProvider\Middleware\IdpMiddleware as IDP;
-
-  class IdpMiddleware extends IDP {
-      /**
-      * Returns the array with permissions
-      *
-      * @param $userId
-      * @param array $roles
-      * @return array
-      */
-      protected function retrievePermissions($userId, array $roles)
-      {
-          $permissions = [];
-          foreach($roles as $role){
-              $permission = Grant::where('role_id', $role->roleId)
-                                      ->where('department_id', $role->departmentId)
-                                      ->pluck('grant')->toArray();
-              $permissions = array_merge($permissions, $permission);
-          }
-          return $permissions;
-      }
-      /**
-      * Returns a ZUser after adding extra parameters. Otherwise return $user
-      *
-      * @param $user
-      * @return ZUser
-      */
-      protected function addExtraParametersToUser(ZUser &$user){
-        //
-      }
-  }
-
-```
 
 After class creation, add in `kernel.php` file the new middleware class in `'$routeMiddleware'` array:
 
@@ -121,27 +43,6 @@ After class creation, add in `kernel.php` file the new middleware class in `'$ro
   'idp' => \App\Http\Middleware\IdpMiddleware::class,
 ```
 
-### Step 6 - AuthServiceProvider
-
-Add in `AuthServiceProvicer` class, on `App\Http\Middleware` folder, following uses:
-
-```php
-  use Illuminate\Support\Facades\Auth;
-  use Zanichelli\IdentityProvider\Guards\ZGuard;
-  use Zanichelli\IdentityProvider\Providers\ZAuthServiceProvider;
-```
-
-And the following code to `boot()` method:
-
-```php
-  Auth::provider('z-provider', function ($app, array $config){
-      return new ZAuthServiceProvider();
-   });
-
-  Auth::extend('z-session', function ($app, $name, array $config){
-    return ZGuard::create($this->app['session.store'], Auth::createUserProvider($config['provider']));
-  });
-```
 
 ### Step 7 - auth.php editing
 

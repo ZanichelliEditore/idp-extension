@@ -64,6 +64,11 @@ class IdpProvider extends ServiceProvider
             __DIR__ . '/../routes/api.php' => base_path('routes/idp-api.php'),
         ], 'routes');
 
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/auth.php',
+            'auth'
+        );
+        
         Session::extend('idp-token', function ($app) {
             $connection = $app['config']['session.connection'];
             return new SessionWithTokenHandler(
