@@ -51,9 +51,6 @@ class IdpProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../database/migrations/' => database_path('migrations'),
         ], 'migrations');
-        $this->publishes([
-            __DIR__ . '/../config/idp-extension.php' => config_path('idp-extension.php'),
-        ], 'config');
 
         $this->app['router']->namespace('Zanichelli\IdpExtension\Http\Controllers')
             ->middleware(['api'])

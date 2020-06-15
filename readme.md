@@ -1,5 +1,7 @@
 # Zanichelli IDP Laravel Extension packages
 
+This is Laravel package to use with laravel-jwt-idp (Github: https://github.com/ZanichelliEditore/laravel-jwt-idp).
+
 ## How to integrate package in your project
 
 ### Step 1 - Install by Composer
@@ -11,7 +13,7 @@
 **`Note:`you should use tag instead of branch-name (e.g. _"zanichelli/idp-extensions:dev-V1.0.0"_ )**
 
 
-### Step 4 - .env file
+### Step 2 - .env file
 
 Add this lines at bottom of your .env file:
 
@@ -27,7 +29,35 @@ If you need to use your own login form (instead of the IDP one), please add this
   IDP_LOGIN_URL=https://idp.zanichelli.it/v3/login
 ```
 
-### Step 5 - Extends IDP middleware
+### Step 3 - auth.php editing
+
+Edit `config/auth.php` as follow:
+
+- In `'defaults'` array change value of `'guard'` from `'web'` to `'z-session'`
+
+
+### Step 4 - publish migrations
+
+There are 2 migration from this package, Grants table and Sessions Table.
+
+```bash
+   php artisan vendor:publish --provider="zanichelli/idp-extensions" --tag=migrations
+```
+
+
+### Final step - protect your routes
+
+Add to your route file (tipically `web.php`) the new middleware `idp`; code smells like this:
+
+```php
+  Route::group(['middleware'=>'idp'],function(){
+    Route::get('/', function(){
+      return view('home');
+    });
+  });
+```
+
+###  Extends IDP middleware
 
 In order to edit retrive permissions or add extra parameter to user object you can extend default class IDP Middleware.
 
@@ -43,71 +73,6 @@ After class creation, add in `kernel.php` file the new middleware class in `'$ro
   'idp' => \App\Http\Middleware\IdpMiddleware::class,
 ```
 
-
-### Step 7 - auth.php editing
-
-Edit `config/auth.php` as follow:
-
-- In `'defaults'` array change value of `'guard'` from `'web'` to `'z-session'`
-
-- Add new guards into `'guards'` array in `config/auth.php` file:
-
-  ```php
-    'z-session' => [
-        'driver' => 'z-session',
-        'provider' => 'z-provider'
-    ]
-  ```
-
-- Add new provider into `'providers'` array after `'users'`:
-
-  ```php
-    'z-provider' => [
-        'driver' => 'z-provider'
-    ]
-  ```
-
-### Step 8 - create a Grant model
-
-Go to a prompt or a terminal and cd into project directory;
-Then run `php artisan make:model Grant`;
-After that add `protected $timestamps = false;` to your brand new class;
-
-### Step 9 - create a migration for grants table
-
-Go to a prompt or a terminal and cd into project directory;
-Then run `php artisan make:migration create_grants_table`;
-after that in `up()` function update the code as follow:
-
-```php
-  public function up()
-  {
-      Schema::create('grants', function (Blueprint $table) {
-          $table->increments('id');
-          $table->integer('role_id');
-          $table->integer('department_id')->nullable();
-          $table->text('grant');
-      });
-  }
-```
-
-### Step 10 - run migrations
-
-Go to a prompt or a terminal and cd into project directory;
-Then run `php artisan migrate` to upgrade your database schema
-with new migration created above
-
-### Final step - protect your routes
-
-Add to your route file (tipically `web.php`) the new middleware `idp`; code smells like this:
-
-```php
-  Route::group(['middleware'=>'idp'],function(){
-    Route::get('/', function(){
-      return view('home');
-    });
-  });
-```
 
 ## Logout idp
 
