@@ -44,8 +44,12 @@ There are 2 migration from this package, Grants table and Sessions Table.
    php artisan vendor:publish --provider="zanichelli/idp-extensions" --tag=migrations
 ```
 
+### Step 4 - create route middleware and protect your routes
+In Kernel.php file add "idp" in your routeMiddleware
 
-### Final step - protect your routes
+```php
+'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpMiddleware::class,
+```
 
 Add to your route file (tipically `web.php`) the new middleware `idp`; code smells like this:
 
