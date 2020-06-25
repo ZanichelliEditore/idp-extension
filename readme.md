@@ -41,8 +41,10 @@ Edit `config/auth.php` as follow:
 There are 2 migration from this package, Grants table and Sessions Table.
 
 ```bash
-   php artisan vendor:publish --provider="zanichelli/idp-extensions" --tag=migrations
+   php artisan vendor:publish
 ```
+
+and select the "zanichelli/idp-extension" provider
 
 ### Step 4 - create route middleware and protect your routes
 In Kernel.php file add "idp" in your routeMiddleware
