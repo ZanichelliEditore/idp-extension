@@ -22,6 +22,7 @@ class IdpProvider extends ServiceProvider
                 $this->app->refresh('request', $guard, 'setRequest');
             });
         });
+
         Session::extend('idp-token', function ($app) {
             $connection = $app['config']['session.connection'];
             return new SessionWithTokenHandler(
@@ -52,7 +53,7 @@ class IdpProvider extends ServiceProvider
             __DIR__ . '/../database/migrations/' => database_path('migrations'),
         ], 'migrations');
 
-        $this->app['router']->namespace('Zanichelli\IdpExtension\Http\Controllers')
+        $this->app['router']
             ->middleware(['api'])
             ->group(function () {
                 $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
