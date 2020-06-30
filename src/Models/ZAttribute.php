@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andreadecastri
- * Date: 25/10/18
- * Time: 14.10
- */
 
-namespace Zanichelli\Models;
-
+namespace Zanichelli\IdpExtension\Models;
 
 class ZAttribute {
 

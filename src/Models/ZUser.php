@@ -1,14 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andreadecastri
- * Date: 21/09/18
- * Time: 15.56
- *
- * @author Andrea De Castri
- */
 
-namespace Zanichelli\IdentityProvider\Models;
+namespace Zanichelli\IdpExtension\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 

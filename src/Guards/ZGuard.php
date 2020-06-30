@@ -1,22 +1,14 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: andreadecastri
- * Date: 21/09/18
- * Time: 15.50
- *
- * @author Andrea De Castri
- */
 
-namespace Zanichelli\IdentityProvider\Guards;
+namespace Zanichelli\IdpExtension\Guards;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Session\Session;
-use Zanichelli\IdentityProvider\Providers\ZAuthServiceProvider;
+use Zanichelli\IdpExtension\Providers\ZAuthServiceProvider;
 
 
 class ZGuard implements Guard, StatefulGuard
@@ -227,10 +219,7 @@ class ZGuard implements Guard, StatefulGuard
 
             $this->session->flush();
 
-            return redirect(env('IDP_LOGOUT_URL') . '?' . http_build_query([
-                'token' => $token,
-                'redirect' => env('APP_URL')
-            ]));
+            $this->provider->logout($token);
         }
 
         return redirect(env('IDP_URL') . '?' . http_build_query([
