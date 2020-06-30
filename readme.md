@@ -10,7 +10,7 @@ This is Laravel package to use with laravel-jwt-idp (Github: https://github.com/
    composer require zanichelli/idp-extensions
 ```
 
-**`Note:`you should use tag instead of branch-name (e.g. _"zanichelli/idp-extensions:dev-V1.0.0"_ )**
+**`Note:`you should use tag instead of branch-name (e.g. _"zanichelli/idp-extensions:V1.0.0"_ or _"zanichelli/idp-extensions:dev-{branch-name}"_ )**
 
 
 ### Step 2 - .env file
