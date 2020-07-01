@@ -3,22 +3,24 @@
 namespace Zanichelli\IdpExtension\Http\Middleware;
 
 use Closure;
-use App\Models\Grant;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Zanichelli\IdpExtension\Models\Grant;
 use Zanichelli\IdpExtension\Models\ZUser;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
-class IdpMiddleware {
+class IdpMiddleware
+{
 
     use ZUserBuilder;
 
-    public function handle(Request $request, Closure $next){
+    public function handle(Request $request, Closure $next)
+    {
 
         // Check if the request has the token field
-        if($request->input('token')){
+        if ($request->input('token')) {
             $token = $request->input('token');
 
             $client = new Client(['verify' => false]);
@@ -29,12 +31,12 @@ class IdpMiddleware {
                         'Authorization' => 'Bearer ' . $token
                     ]
                 ]);
-            } catch (\Exception $e){
+            } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 return redirect(env('IDP_URL') . '?redirect=' . $request->url());
             }
 
-            if($response->getStatusCode() == 200){
+            if ($response->getStatusCode() == 200) {
 
                 $userJson = \GuzzleHttp\json_decode($response->getBody());
 
@@ -44,8 +46,20 @@ class IdpMiddleware {
 
                 $permissions = $this->retrievePermissions($userJson->id, $roles);
 
-                $user = ZUser::create($userJson->id, $userJson->username, $userJson->email, $token, $userJson->is_verified, $userJson->name,
-                    $userJson->surname, $userJson->is_employee, $userJson->created_at, $roles, $permissions, $attributes);
+                $user = ZUser::create(
+                    $userJson->id,
+                    $userJson->username,
+                    $userJson->email,
+                    $token,
+                    $userJson->is_verified,
+                    $userJson->name,
+                    $userJson->surname,
+                    $userJson->is_employee,
+                    $userJson->created_at,
+                    $roles,
+                    $permissions,
+                    $attributes
+                );
 
                 $this->addExtraParametersToUser($user);
 
@@ -54,7 +68,7 @@ class IdpMiddleware {
         }
 
         // Check if the user is logged in
-        if(!Auth::user()){
+        if (!Auth::user()) {
             return redirect(env('IDP_URL') . '?redirect=' . $request->url());
         }
 
@@ -90,7 +104,7 @@ class IdpMiddleware {
      *
      * @param $user
      */
-    protected function addExtraParametersToUser(ZUser &$user) {
-        
+    protected function addExtraParametersToUser(ZUser &$user)
+    {
     }
 }

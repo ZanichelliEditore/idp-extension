@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Zanichelli\IdpExtension\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
