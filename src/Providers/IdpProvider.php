@@ -68,15 +68,10 @@ class IdpProvider extends ServiceProvider
             'auth'
         );
 
-        Session::extend('idp-token', function ($app) {
-            $connection = $app['config']['session.connection'];
-            return new SessionWithTokenHandler(
-                $app['db']->connection($connection),
-                $app['config']['session.table'],
-                $app['config']['session.lifetime'],
-                $app
-            );
-        });
+        $this->publishes([
+            __DIR__ . '/../config/idp.php' => config_path('idp.php')
+        ], 'config');
+
     }
 
     /**
