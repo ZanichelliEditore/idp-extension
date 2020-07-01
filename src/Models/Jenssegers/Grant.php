@@ -1,6 +1,6 @@
 <?php
 
-namespace Zanichelli\IdpExtension\Jenssegers\Models;
+namespace Zanichelli\IdpExtension\Models\Jenssegers;
 
 use Jenssegers\Mongodb\Eloquent\Model;
 

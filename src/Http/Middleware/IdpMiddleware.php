@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Zanichelli\IdpExtension\Models\Grant;
-use Zanichelli\IdpExtension\Jenssegers\Models\Grant as JenssegersGrant;
+use Zanichelli\IdpExtension\Models\Jenssegers\Grant as JenssegersGrant;
 use Zanichelli\IdpExtension\Models\ZUser;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
