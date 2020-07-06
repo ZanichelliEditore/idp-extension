@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Zanichelli\IdpExtension\Models\Grant;
-use Zanichelli\IdpExtension\Models\Jenssegers\Grant as JenssegersGrant;
+use Zanichelli\IdpExtension\Models\Mongodb\Grant as MongoGrant;
 use Zanichelli\IdpExtension\Models\ZUser;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
@@ -88,7 +88,7 @@ class IdpMiddleware
         $permissions = [];
         $grant = new Grant();
         if (config('idp.connection') === 'mongodb') {
-            $grant = new JenssegersGrant(); 
+            $grant = new MongoGrant(); 
         }
         foreach ($roles as $role) {
             $permission = $grant::where('role_id', $role->roleId)

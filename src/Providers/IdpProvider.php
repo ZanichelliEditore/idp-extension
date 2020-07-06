@@ -2,11 +2,13 @@
 
 namespace Zanichelli\IdpExtension\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
-use Zanichelli\IdpExtension\Guards\ZGuard;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\ServiceProvider;
+use Zanichelli\IdpExtension\Guards\ZGuard;
+use Zanichelli\IdpExtension\Providers\Mongodb\SessionManager;
 
 class IdpProvider extends ServiceProvider
 {
@@ -22,9 +24,18 @@ class IdpProvider extends ServiceProvider
                 $this->app->refresh('request', $guard, 'setRequest');
             });
         });
+        
+        $this->app->resolving('session', function ($session) {
+            $session->extend('idp-token-mongodb', function ($app) {
 
+                $manager = new SessionManager($app);
+                return $manager->driver('mongodb');
+            });
+        });
+        
         Session::extend('idp-token', function ($app) {
             $connection = $app['config']['session.connection'];
+
             return new SessionWithTokenHandler(
                 $app['db']->connection($connection),
                 $app['config']['session.table'],
