@@ -17,7 +17,7 @@ class SessionManager extends \Illuminate\Support\Manager
 
         $database = (string) $connection->getMongoDB();
 
-        $handler = new SessionMongoDBWithTokenHandler($connection->getMongoClient(), $this->getMongoDBOptions($database, $collection));
+        $handler = new SessionMongoDBWithTokenHandler($connection->getMongoClient(), $this->getMongoDBOptions($database, $collection), $this->app);
 
         $handler->open(null, 'mongodb');
 
@@ -63,7 +63,13 @@ class SessionManager extends \Illuminate\Support\Manager
      */
     protected function getMongoDBOptions($database, $collection)
     {
-        return ['database' => $database, 'collection' => $collection, 'id_field' => '_id', 'data_field' => 'payload', 'time_field' => 'last_activity'];
+        return [
+            'database' => $database,
+            'collection' => $collection,
+            'id_field' => '_id',
+            'data_field' => 'payload',
+            'time_field' => 'last_activity',
+        ];
     }
 
     /**
