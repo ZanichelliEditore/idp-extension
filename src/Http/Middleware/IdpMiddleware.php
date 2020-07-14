@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Zanichelli\IdpExtension\Models\Grant;
+use Zanichelli\IdpExtension\Models\Mongodb\Grant as MongoGrant;
 use Zanichelli\IdpExtension\Models\ZUser;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
@@ -85,8 +86,12 @@ class IdpMiddleware
     protected function retrievePermissions($userId, array $roles)
     {
         $permissions = [];
+        $grant = new Grant();
+        if (config('idp.connection') === 'mongodb') {
+            $grant = new MongoGrant(); 
+        }
         foreach ($roles as $role) {
-            $permission = Grant::where('role_id', $role->roleId)
+            $permission = $grant::where('role_id', $role->roleId)
                 ->where('department_id', null)
                 ->orWhere(function ($query) use ($role) {
                     $query->where('department_id', $role->departmentId)
