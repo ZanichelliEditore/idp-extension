@@ -88,14 +88,13 @@ class IdpMiddleware
         $permissions = [];
         $grant = new Grant();
         if (config('idp.connection') === 'mongodb') {
-            $grant = new MongoGrant(); 
+            $grant = new MongoGrant();
         }
         foreach ($roles as $role) {
             $permission = $grant::where('role_id', $role->roleId)
-                ->where('department_id', null)
-                ->orWhere(function ($query) use ($role) {
+                ->where(function ($query) use ($role) {
                     $query->where('department_id', $role->departmentId)
-                        ->where('role_id', $role->roleId);
+                        ->orWhere('department_id', null);
                 })
                 ->pluck('grant')->toArray();
             $permissions = array_merge($permissions, $permission);
