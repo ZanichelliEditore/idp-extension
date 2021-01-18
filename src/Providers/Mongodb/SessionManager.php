@@ -13,11 +13,11 @@ class SessionManager extends \Illuminate\Support\Manager
     {
         $connection = $this->getMongoDBConnection();
 
-        $collection = $this->app['config']['session.table'];
+        $collection = $this->container['config']['session.table'];
 
         $database = (string) $connection->getMongoDB();
 
-        $handler = new SessionMongoDBWithTokenHandler($connection->getMongoClient(), $this->getMongoDBOptions($database, $collection), $this->app);
+        $handler = new SessionMongoDBWithTokenHandler($connection->getMongoClient(), $this->getMongoDBOptions($database, $collection), $this->container);
 
         $handler->open(null, 'mongodb');
 
@@ -31,14 +31,14 @@ class SessionManager extends \Illuminate\Support\Manager
      */
     protected function getMongoDBConnection()
     {
-        $connection = $this->app['config']['session.connection'];
+        $connection = $this->container['config']['session.connection'];
 
         // The default connection may still be mysql, we need to verify if this connection
         // is using the mongodb driver.
         if (is_null($connection)) {
-            $default = $this->app['db']->getDefaultConnection();
+            $default = $this->container['db']->getDefaultConnection();
 
-            $connections = $this->app['config']['database.connections'];
+            $connections = $this->container['config']['database.connections'];
 
             // If the default database driver is not mongodb, we will loop the available
             // connections and select the first one using the mongodb driver.
@@ -53,7 +53,7 @@ class SessionManager extends \Illuminate\Support\Manager
             }
         }
 
-        return $this->app['db']->connection($connection);
+        return $this->container['db']->connection($connection);
     }
 
     /**
