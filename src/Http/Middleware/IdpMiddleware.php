@@ -35,7 +35,7 @@ class IdpMiddleware
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json([], 403);
+                    return response()->json([], 401);
                 }
 
                 return redirect(env('IDP_URL') . '?redirect=' . $request->url());
