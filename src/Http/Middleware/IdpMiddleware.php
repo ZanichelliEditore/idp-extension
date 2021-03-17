@@ -74,6 +74,10 @@ class IdpMiddleware
 
         // Check if the user is logged in
         if (!Auth::user()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([], 401);
+            }
+
             return redirect(env('IDP_URL') . '?redirect=' . $request->url());
         }
 
