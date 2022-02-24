@@ -15,8 +15,8 @@ class CreateGrantsTable extends Migration
     {
         Schema::create('grants', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('role_id');
-            $table->integer('department_id')->nullable();
+            $table->string('role_name', 50)->unique();
+            $table->string('department_name', 20)->nullable();
             $table->text('grant');
         });
     }

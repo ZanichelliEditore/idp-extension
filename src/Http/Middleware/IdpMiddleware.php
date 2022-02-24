@@ -99,10 +99,10 @@ class IdpMiddleware
             $grant = new MongoGrant();
         }
         foreach ($roles as $role) {
-            $permission = $grant::where('role_id', $role->roleId)
+            $permission = $grant::where('role_name', $role->roleName)
                 ->where(function ($query) use ($role) {
-                    $query->where('department_id', $role->departmentId)
-                        ->orWhere('department_id', null);
+                    $query->where('department_name', $role->departmentName)
+                        ->orWhere('department_name', null);
                 })
                 ->pluck('grant')->toArray();
             $permissions = array_merge($permissions, $permission);
