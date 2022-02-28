@@ -61,9 +61,6 @@ Using the command below will only apply the changes about role_id and department
 ```bash
    php artisan vendor:publish --tag=grants-by-name-instead-of-id
 ```
-
-
-and select the "zanichelli/idp-extension" provider
 ### Step 5 - create route middleware and protect your routes
 In Kernel.php file add "idp" in your routeMiddleware
 
