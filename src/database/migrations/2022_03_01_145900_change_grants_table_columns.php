@@ -15,7 +15,7 @@ class ChangeGrantsTableColumns extends Migration
     public function up()
     {
         DB::statement('CREATE TABLE grants_backup LIKE grants;');
-        DB::statement('INSERT new_table SELECT * FROM old_table');
+        DB::statement('INSERT grants_backup SELECT * FROM grants');
         
         Schema::table('grants', function (Blueprint $table) {
             $table->dropColumn('role_id');
