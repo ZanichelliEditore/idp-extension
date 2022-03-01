@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class ChangeGrantsTableColumns extends Migration
 {
@@ -13,6 +14,9 @@ class ChangeGrantsTableColumns extends Migration
      */
     public function up()
     {
+        DB::statement('CREATE TABLE grants_backup LIKE grants;');
+        DB::statement('INSERT new_table SELECT * FROM old_table');
+        
         Schema::table('grants', function (Blueprint $table) {
             $table->dropColumn('role_id');
             $table->dropColumn('department_id');
