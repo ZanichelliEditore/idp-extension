@@ -14,9 +14,15 @@ class ChangeGrantsTableColumns extends Migration
      */
     public function up()
     {
-        DB::statement('CREATE TABLE grants_backup LIKE grants;');
+        // INFO : Create a backup table
+        Schema::create('grants_backup', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('role_id');
+            $table->integer('department_id')->nullable();
+            $table->text('grant');
+        });
         DB::statement('INSERT grants_backup SELECT * FROM grants');
-        
+
         Schema::table('grants', function (Blueprint $table) {
             $table->dropColumn('role_id');
             $table->dropColumn('department_id');
@@ -33,12 +39,7 @@ class ChangeGrantsTableColumns extends Migration
      */
     public function down()
     {
-        Schema::table('grants', function (Blueprint $table) {
-            $table->dropColumn('role_name');
-            $table->dropColumn('department_name');
-            // INFO : Create new columns
-            $table->integer('role_id');
-            $table->integer('department_id')->nullable();
-        });
+        Schema::dropIfExists('grants');
+        Schema::rename("grants_backup", "grants");
     }
 }
