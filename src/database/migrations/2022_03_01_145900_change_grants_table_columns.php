@@ -15,20 +15,13 @@ class ChangeGrantsTableColumns extends Migration
     public function up()
     {
         // INFO : Create a backup table
-        Schema::create('grants_backup', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('role_id');
-            $table->integer('department_id')->nullable();
-            $table->text('grant');
-        });
-        DB::statement('INSERT grants_backup SELECT * FROM grants');
+        Schema::rename("grants", "grants_backup");
 
-        Schema::table('grants', function (Blueprint $table) {
-            $table->dropColumn('role_id');
-            $table->dropColumn('department_id');
-            // INFO : Create new columns
+        Schema::create('grants', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('role_name', 50)->unique();
             $table->string('department_name', 20)->nullable();
+            $table->text('grant');
         });
     }
 
