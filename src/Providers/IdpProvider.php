@@ -24,7 +24,7 @@ class IdpProvider extends ServiceProvider
                 $this->app->refresh('request', $guard, 'setRequest');
             });
         });
-        
+
         $this->app->resolving('session', function ($session) {
             $session->extend('idp-token-mongodb', function ($app) {
 
@@ -32,7 +32,7 @@ class IdpProvider extends ServiceProvider
                 return $manager->driver('mongodb');
             });
         });
-        
+
         Session::extend('idp-token', function ($app) {
             $connection = $app['config']['session.connection'];
 
@@ -64,6 +64,10 @@ class IdpProvider extends ServiceProvider
             __DIR__ . '/../database/migrations/' => database_path('migrations'),
         ], 'migrations');
 
+        $this->publishes([
+            __DIR__ . '/../database/migrations/2022_03_01_145900_change_grants_table_columns.php' => database_path('migrations/2022_03_01_145900_change_grants_table_columns.php'),
+        ], 'grants-by-name-instead-of-id');
+
         $this->app['router']->namespace('Zanichelli\IdpExtension\Http\Controllers')
             ->middleware(['api'])
             ->group(function () {
@@ -82,7 +86,6 @@ class IdpProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/idp.php' => config_path('idp.php')
         ], 'config');
-
     }
 
     /**

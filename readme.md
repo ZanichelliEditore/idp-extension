@@ -46,7 +46,22 @@ There are 2 migration from this package, Grants table and Sessions Table.
 
 and select the "zanichelli/idp-extension" provider
 
-### Step 4 - create route middleware and protect your routes
+### Step 4.A - publish migrations (BREAKING CHANGES) after v3.0.*****
+There are 3 migration from this package :
+ - Grants table
+ - Sessions Table
+ - Grants table key changes (Change role_id and department_id to **role_name** and **department_name**).
+
+
+```bash
+   php artisan vendor:publish
+```
+
+Using the command below will only apply the changes about role_id and department_id
+```bash
+   php artisan vendor:publish --tag=grants-by-name-instead-of-id
+```
+### Step 5 - create route middleware and protect your routes
 In Kernel.php file add "idp" in your routeMiddleware
 
 ```php
