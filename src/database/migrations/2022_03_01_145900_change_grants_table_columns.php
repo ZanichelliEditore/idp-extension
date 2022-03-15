@@ -19,8 +19,8 @@ class ChangeGrantsTableColumns extends Migration
 
         Schema::create('grants', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('role_name', 50)->unique();
-            $table->string('department_name', 20)->nullable();
+            $table->string('role_name', 50);
+            $table->string('department_name', 50)->nullable();
             $table->text('grant');
         });
     }
