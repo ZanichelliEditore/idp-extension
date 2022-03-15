@@ -16,12 +16,15 @@ class ChangeGrantsTableColumns extends Migration
         // INFO : Create a backup table
         Schema::rename("grants", "grants_backup");
 
-        Schema::create('grants', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('role_name', 50);
-            $table->string('department_name', 50)->nullable();
-            $table->text('grant');
-        });
+        Schema::create(
+            'grants',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('role_name', 50)->unique();
+                $table->string('department_name', 20)->nullable();
+                $table->text('grant');
+            }
+        );
     }
 
     /**

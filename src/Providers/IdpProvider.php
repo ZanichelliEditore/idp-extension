@@ -66,6 +66,7 @@ class IdpProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../database/migrations/2022_03_01_145900_change_grants_table_columns.php' => database_path('migrations/2022_03_01_145900_change_grants_table_columns.php'),
+            __DIR__ . '/../database/migrations/2022_03_15_111939_alter_grants_table_new_columns.php' => database_path('migrations/2022_03_15_111939_alter_grants_table_new_columns.php'),
         ], 'grants-by-name-instead-of-id');
 
         $this->app['router']->namespace('Zanichelli\IdpExtension\Http\Controllers')
