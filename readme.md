@@ -62,6 +62,14 @@ Using the command below will only apply the changes about role_id and department
    php artisan vendor:publish --tag=grants-by-name-instead-of-id
 ```
 
+Use
+
+```bash
+   php artisan vendor:publish --tag=grants-by-name-instead-of-id --force
+```
+
+if you need to overwrite grants table changes migration.
+
 ### Step 5 - create route middleware and protect your routes
 
 In Kernel.php file add "idp" in your routeMiddleware
