@@ -131,6 +131,7 @@ With this integration you could use some Laravel's feature that allows to handle
 - `Auth::guest()`: returns `true` if a user is guest, `false` otherwise
 - `Auth::user()`: returns a `ZUser` class instance, `null` otherwise
 - `Auth::id()`: returns `userId` if authtenticated, `null` otherwise
+- `Auth::hasUser()`: returns `true` if there's a ZUser in our current session, `false` otherwise
 - `Auth::setUser($ZUser)`: sets a `Zuser` in session
 - `Auth::attempt($credentials, $remember)`: try to login with IDP without using the login form, if success returns `true`, otherwise `false`
 - `Auth::logout()`: logout a user, return `redirect`
