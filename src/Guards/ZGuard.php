@@ -113,7 +113,7 @@ class ZGuard implements Guard, StatefulGuard
      */
     public function hasUser()
     {
-        return $this->session->get('user') ? true : false;
+        return $this->session->exists('user');
     }
 
     /**
