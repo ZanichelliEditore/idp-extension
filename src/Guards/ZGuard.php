@@ -107,6 +107,16 @@ class ZGuard implements Guard, StatefulGuard
     }
 
     /**
+     * Determine if the guard has a user instance.
+     *
+     * @return bool
+     */
+    public function hasUser()
+    {
+        return $this->session->exists('user');
+    }
+
+    /**
      * Set the current user.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable $user
