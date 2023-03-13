@@ -25,7 +25,7 @@ Add this lines at bottom of your .env file:
 If you need to use your own login form (instead of the IDP one), please add this line too:
 
 ```
-  IDP_LOGIN_URL=https://idp.zanichelli.it/v3/login
+  IDP_LOGIN_URL=https://idp.zanichelli.it/v4/login
 ```
 
 ### Step 3 - auth.php editing
