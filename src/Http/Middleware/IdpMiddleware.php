@@ -43,7 +43,7 @@ class IdpMiddleware
 
             if ($response->getStatusCode() == 200) {
 
-                $userJson = \GuzzleHttp\json_decode($response->getBody());
+                $userJson = \GuzzleHttp\Utils::jsonDecode($response->getBody());
 
                 $roles = $this->createRoleArray($userJson->roles);
 
