@@ -63,7 +63,8 @@ class IdpMiddleware
                     $userJson->created_at,
                     $roles,
                     $permissions,
-                    $attributes
+                    $attributes,
+                    $userJson->is_myzanichelli
                 );
 
                 $this->addExtraParametersToUser($user);

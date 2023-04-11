@@ -5,7 +5,8 @@ namespace Zanichelli\IdpExtension\Models;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 
-class ZUser implements Authenticatable {
+class ZUser implements Authenticatable
+{
 
     public $id;
     public $username;
@@ -19,9 +20,23 @@ class ZUser implements Authenticatable {
     public $roles;
     public $permissions;
     public $attributes;
+    public $myzId;
 
-    private function __construct($id, $username, $email, $token, $isVerified, $name, $surname,
-                                $isEmployee, $createdAt, $roles = [], $permissions = [], $attributes = []){
+    private function __construct(
+        $id,
+        $username,
+        $email,
+        $token,
+        $isVerified,
+        $name,
+        $surname,
+        $isEmployee,
+        $createdAt,
+        $roles = [],
+        $permissions = [],
+        $attributes = [],
+        $myzId = null
+    ) {
         $this->id = $id;
         $this->email = $email;
         $this->username = $username;
@@ -34,6 +49,7 @@ class ZUser implements Authenticatable {
         $this->roles = $roles;
         $this->permissions = $permissions;
         $this->attributes = $attributes;
+        $this->myzId = $myzId;
     }
 
     /**
@@ -51,11 +67,25 @@ class ZUser implements Authenticatable {
      * @param array $roles
      * @param array $permissions
      * @param array $attributes
+     * @param int $myzId
      * @return ZUser
      */
-    public static function create($id, $username, $email, $token, $isVerified, $name, $surname,
-                                  $isEmployee, $createdAt, $roles = [], $permissions = [], $attributes = []){
-        return new self($id, $username, $email, $token, $isVerified, $name, $surname, $isEmployee, $createdAt, $roles, $permissions, $attributes);
+    public static function create(
+        $id,
+        $username,
+        $email,
+        $token,
+        $isVerified,
+        $name,
+        $surname,
+        $isEmployee,
+        $createdAt,
+        $roles = [],
+        $permissions = [],
+        $attributes = [],
+        $myzId = null
+    ) {
+        return new self($id, $username, $email, $token, $isVerified, $name, $surname, $isEmployee, $createdAt, $roles, $permissions, $attributes, $myzId);
     }
 
 
@@ -64,7 +94,8 @@ class ZUser implements Authenticatable {
      *
      * @return string
      */
-    public function getAuthIdentifierName(){
+    public function getAuthIdentifierName()
+    {
         return 'username';
     }
 
@@ -73,7 +104,8 @@ class ZUser implements Authenticatable {
      *
      * @return mixed
      */
-    public function getAuthIdentifier(){
+    public function getAuthIdentifier()
+    {
         return $this->username;
     }
 
@@ -82,7 +114,8 @@ class ZUser implements Authenticatable {
      *
      * @return string
      */
-    public function getAuthPassword(){
+    public function getAuthPassword()
+    {
         return null;
     }
 
@@ -91,7 +124,8 @@ class ZUser implements Authenticatable {
      *
      * @return string
      */
-    public function getRememberToken(){
+    public function getRememberToken()
+    {
         return $this->token;
     }
 
@@ -101,7 +135,8 @@ class ZUser implements Authenticatable {
      * @param  string $value
      * @return void
      */
-    public function setRememberToken($value){
+    public function setRememberToken($value)
+    {
         $this->token = $value;
     }
 
@@ -110,8 +145,8 @@ class ZUser implements Authenticatable {
      *
      * @return string
      */
-    public function getRememberTokenName(){
+    public function getRememberTokenName()
+    {
         return 'token';
     }
-
 }
