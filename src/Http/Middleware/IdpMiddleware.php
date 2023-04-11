@@ -64,7 +64,7 @@ class IdpMiddleware
                     $roles,
                     $permissions,
                     $attributes,
-                    $userJson->myz_id
+                    !empty($userJson->myz) ? $userJson->myz->id : null
                 );
 
                 $this->addExtraParametersToUser($user);
