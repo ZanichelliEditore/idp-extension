@@ -48,5 +48,4 @@ return [
             'driver' => 'z-provider'
         ]
     ],
-    'rehash_on_login' => false,
 ];
