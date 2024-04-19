@@ -1,7 +1,7 @@
 <?php
 
 return [
-    
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -48,5 +48,5 @@ return [
             'driver' => 'z-provider'
         ]
     ],
-
+    'rehash_on_login' => false,
 ];

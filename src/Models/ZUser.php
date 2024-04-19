@@ -114,4 +114,14 @@ class ZUser implements Authenticatable {
         return 'token';
     }
 
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPasswordName()
+    {
+        return 'password';
+    }
+
 }

@@ -151,4 +151,17 @@ class ZAuthServiceProvider implements UserProvider
 
         return true;
     }
+
+    /**
+     * re-hashing and storing the user's password.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param  array $credentials
+     * @param  bool $force
+     * @return bool
+     */
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false)
+    {
+        return false;
+    }
 }
