@@ -17,7 +17,8 @@ class IdpUserMiddleware
     public function handle(Request $request, Closure $next)
     {
         // Check if the request has the token field
-        if ($request->input('token')) {
+        $token = $request->cookies->get(config("idp.cookie.name")) ?: $request->input('token');
+        if ($token) {
             $token = $request->input('token');
 
             $client = new Client(['verify' => false]);
