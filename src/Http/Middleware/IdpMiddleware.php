@@ -6,8 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Zanichelli\IdpExtension\Models\Grant;
-use Zanichelli\IdpExtension\Models\Mongodb\Grant as MongoGrant;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
 class IdpMiddleware extends IdpUserMiddleware
@@ -34,12 +32,7 @@ class IdpMiddleware extends IdpUserMiddleware
      */
     protected function retrievePermissions($userId, array $roles)
     {
-        $grant = new Grant();
-        if (config('idp.connection') === 'mongodb') {
-            $grant = new MongoGrant();
-        }
-
-        $builder = DB::table($grant->getTable());
+        $builder = DB::table('grants');
 
         foreach ($roles as $role) {
             $builder->orWhere(function ($query) use ($role) {

@@ -3,12 +3,10 @@
 namespace Zanichelli\IdpExtension\Providers;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Zanichelli\IdpExtension\Guards\ZGuard;
-use Zanichelli\IdpExtension\Providers\Mongodb\SessionManager;
 
 class IdpProvider extends ServiceProvider
 {
@@ -22,14 +20,6 @@ class IdpProvider extends ServiceProvider
         Auth::extend('idp', function ($app, $name, array $config) {
             return tap($this->makeGuard($config), function ($guard) {
                 $this->app->refresh('request', $guard, 'setRequest');
-            });
-        });
-
-        $this->app->resolving('session', function ($session) {
-            $session->extend('idp-token-mongodb', function ($app) {
-
-                $manager = new SessionManager($app);
-                return $manager->driver('mongodb');
             });
         });
 
