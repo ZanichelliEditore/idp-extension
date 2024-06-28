@@ -5,6 +5,7 @@ namespace Zanichelli\IdpExtension\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Zanichelli\IdpExtension\Models\Grant;
 use Zanichelli\IdpExtension\Models\Mongodb\Grant as MongoGrant;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
@@ -33,21 +34,20 @@ class IdpMiddleware extends IdpUserMiddleware
      */
     protected function retrievePermissions($userId, array $roles)
     {
-        $permissions = [];
         $grant = new Grant();
         if (config('idp.connection') === 'mongodb') {
             $grant = new MongoGrant();
         }
+
+        $builder = DB::table($grant->getTable());
+
         foreach ($roles as $role) {
-            $permission = $grant::where('role_name', $role->roleName)
-                ->where(function ($query) use ($role) {
-                    $query->where('department_name', $role->departmentName)
-                        ->orWhere('department_name', null);
-                })
-                ->pluck('grant')->toArray();
-            $permissions = array_merge($permissions, $permission);
+            $builder->orWhere(function ($query) use ($role) {
+                $query->where('role_name', $role->roleName)
+                    ->where('department_name', $role->departmentName);
+            });
         }
 
-        return $permissions;
+        return $builder->pluck('grant');
     }
 }
