@@ -19,8 +19,6 @@ class IdpUserMiddleware
         // Check if the request has the token field
         $token = $request->cookies->get(config("idp.cookie.name")) ?: $request->input('token');
         if ($token) {
-            $token = $request->input('token');
-
             $client = new Client(['verify' => false]);
 
             try {
@@ -66,7 +64,6 @@ class IdpUserMiddleware
                 Auth::setUser($user);
             }
         }
-
         // Check if the user is logged in
         if (!Auth::user()) {
             if ($request->ajax() || $request->wantsJson()) {
