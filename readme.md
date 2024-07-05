@@ -20,6 +20,7 @@ Add this lines at bottom of your .env file:
   IDP_URL=https://idp.zanichelli.it/loginForm
   IDP_TOKEN_URL=https://idp.zanichelli.it/v1/user
   IDP_LOGOUT_URL=https://idp.zanichelli.it/v1/logout
+  IDP_COOKIE_NAME=token
 ```
 
 If you need to use your own login form (instead of the IDP one), please add this line too:
@@ -78,6 +79,16 @@ In Kernel.php file add "idp" in your routeMiddleware
 'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpMiddleware::class,
 ```
 
+The default behaviour also retrieves the user's permissions, which can be omitted by passing the parameter `without_permissions`
+
+```php
+  Route::group(['middleware'=>'idp:without_permissions'],function(){
+    Route::get('/', function(){
+      return view('home');
+    });
+  });
+```
+
 Add to your route file (tipically `web.php`) the new middleware `idp`; code smells like this:
 
 ```php
@@ -86,6 +97,12 @@ Add to your route file (tipically `web.php`) the new middleware `idp`; code smel
       return view('home');
     });
   });
+```
+
+Alternatively, a second middleware reads the cookie and, if found, retrieves the user's data and adds it to the request
+
+```php
+'idp.user' => \Zanichelli\IdpExtension\Http\Middleware\AddIdpUserDataMiddleware::class,
 ```
 
 ### Extends IDP middleware
