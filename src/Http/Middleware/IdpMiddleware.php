@@ -36,8 +36,11 @@ class IdpMiddleware extends IdpUserMiddleware
 
         foreach ($roles as $role) {
             $builder->orWhere(function ($query) use ($role) {
-                $query->where('role_name', $role->roleName)
-                    ->where('department_name', $role->departmentName);
+                $query
+                    ->where('role_name', $role->roleName)
+                    ->where(function ($query) use ($role) {
+                        $query->where('department_name', $role->departmentName)->orWhere('department_name', null);
+                    });
             });
         }
 
