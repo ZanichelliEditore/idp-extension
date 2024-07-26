@@ -66,6 +66,11 @@ class IdpMiddleware
                 $this->addExtraParametersToUser($user);
 
                 Auth::setUser($user);
+
+                if ($request->query('token')) {
+                    $request->query->remove('token');
+                    return redirect($request->url());
+                }
             }
         }
 
