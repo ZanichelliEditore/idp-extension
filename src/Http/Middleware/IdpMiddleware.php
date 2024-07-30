@@ -69,7 +69,7 @@ class IdpMiddleware
 
                 if ($request->query('token')) {
                     $request->query->remove('token');
-                    return redirect($request->url());
+                    return redirect($request->fullUrl());
                 }
             }
         }
