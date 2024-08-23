@@ -69,7 +69,7 @@ class IdpMiddleware
 
                 if ($request->query('token')) {
                     $request->query->remove('token');
-                    return redirect($request->fullUrl());
+                    return redirect(trim($request->url() . "?" . http_build_query($request->query->all()), "?"));
                 }
             }
         }
@@ -115,7 +115,5 @@ class IdpMiddleware
      *
      * @param $user
      */
-    protected function addExtraParametersToUser(ZUser &$user)
-    {
-    }
+    protected function addExtraParametersToUser(ZUser &$user) {}
 }
