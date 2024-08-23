@@ -13,13 +13,13 @@ class AddIdpUserDataMiddleware
 {
     use ZUserBuilder;
 
-    public function handle(Request $request, Closure $next, string $idpUrlEnvKey = 'IDP_URL')
+    public function handle(Request $request, Closure $next)
     {
         $token = $request->cookies->get(config("idp.cookie.name"));
         if ($token) {
             try {
                 $client = new Client(['verify' => false]);
-                $res = $client->get(env($idpUrlEnvKey) . '/v1/user?token=' . $token);
+                $res = $client->get(env('IDP_TOKEN_URL') . '?token=' . $token);
                 $user = json_decode($res->getBody(), true);
 
                 $user['isVerified'] = $user['is_verified'];
