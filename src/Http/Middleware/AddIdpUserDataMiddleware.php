@@ -20,7 +20,14 @@ class AddIdpUserDataMiddleware
             try {
                 $client = new Client(['verify' => false]);
                 $res = $client->get(env($idpUrlEnvKey) . '/v1/user?token=' . $token);
-                $request->merge(['user' => json_decode($res->getBody(), true)]);
+                $user = json_decode($res->getBody(), true);
+
+                $user['isVerified'] = $user['is_verified'];
+                $user['isEmployee'] = $user['is_employee'];
+                $user['createdAt'] = $user['created_at'];
+                unset($user['is_verified'], $user['is_employee'], $user['created_at']);
+
+                $request->merge(['user' => $user]);
             } catch (Exception $e) {
                 Log::error($e->getMessage());
                 return response()->json(['message' => $e->getMessage()], $e->getCode());
