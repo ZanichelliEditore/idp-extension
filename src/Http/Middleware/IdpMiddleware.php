@@ -5,25 +5,19 @@ namespace Zanichelli\IdpExtension\Http\Middleware;
 use Closure;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Zanichelli\IdpExtension\Models\Grant;
-use Zanichelli\IdpExtension\Models\Mongodb\Grant as MongoGrant;
-use Zanichelli\IdpExtension\Models\ZUser;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
+use Zanichelli\IdpExtension\Models\ZUser;
 
 class IdpMiddleware
 {
-
     use ZUserBuilder;
 
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, string $withPermissions = 'with_permissions')
     {
-
-        // Check if the request has the token field
-        if ($request->input('token')) {
-            $token = $request->input('token');
-
+        if ($token = $request->input('token')) {
             $client = new Client(['verify' => false]);
 
             try {
@@ -49,7 +43,10 @@ class IdpMiddleware
 
                 $attributes = $this->createAttributeArray($userJson->attributes);
 
-                $permissions = $this->retrievePermissions($userJson->id, $roles);
+                $permissions = [];
+                if ($withPermissions !== 'without_permissions') {
+                    $permissions = $this->retrievePermissions($userJson->id, $roles);
+                }
 
                 $user = ZUser::create(
                     $userJson->id,
@@ -69,6 +66,11 @@ class IdpMiddleware
                 $this->addExtraParametersToUser($user);
 
                 Auth::setUser($user);
+
+                if ($request->query('token')) {
+                    $request->query->remove('token');
+                    return redirect(trim($request->url() . "?" . http_build_query($request->query->all()), "?"));
+                }
             }
         }
 
@@ -93,22 +95,19 @@ class IdpMiddleware
      */
     protected function retrievePermissions($userId, array $roles)
     {
-        $permissions = [];
-        $grant = new Grant();
-        if (config('idp.connection') === 'mongodb') {
-            $grant = new MongoGrant();
-        }
+        $builder = DB::table('grants');
+
         foreach ($roles as $role) {
-            $permission = $grant::where('role_name', $role->roleName)
-                ->where(function ($query) use ($role) {
-                    $query->where('department_name', $role->departmentName)
-                        ->orWhere('department_name', null);
-                })
-                ->pluck('grant')->toArray();
-            $permissions = array_merge($permissions, $permission);
+            $builder->orWhere(function ($query) use ($role) {
+                $query
+                    ->where('role_name', $role->roleName)
+                    ->where(function ($query) use ($role) {
+                        $query->where('department_name', $role->departmentName)->orWhere('department_name', null);
+                    });
+            });
         }
 
-        return $permissions;
+        return $builder->pluck('grant');
     }
 
     /**
@@ -116,7 +115,5 @@ class IdpMiddleware
      *
      * @param $user
      */
-    protected function addExtraParametersToUser(ZUser &$user)
-    {
-    }
+    protected function addExtraParametersToUser(ZUser &$user) {}
 }
