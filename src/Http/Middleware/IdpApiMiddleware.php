@@ -9,13 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
-class AddIdpUserDataMiddleware
+class IdpApiMiddleware
 {
     use ZUserBuilder;
 
     public function handle(Request $request, Closure $next)
     {
-        $token = $request->input('token')? $request->input('token') : $request->cookies->get(config("idp.cookie.name"));
+        $token = $request->input('token') ?? $request->cookies->get(config("idp.cookie.name"));
+
         if ($token) {
             try {
                 $client = new Client(['verify' => false]);
@@ -31,7 +32,6 @@ class AddIdpUserDataMiddleware
             } catch (Exception $e) {
                 Log::error($e->getMessage());
                 return response()->json([], 401);
-
             }
         } else {
             return response()->json([], 401);
