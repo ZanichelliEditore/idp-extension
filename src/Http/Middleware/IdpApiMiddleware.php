@@ -15,7 +15,7 @@ class AddIdpUserDataMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        $token = $request->cookies->get(config("idp.cookie.name"));
+        $token = $request->input('token')? $request->input('token') : $request->cookies->get(config("idp.cookie.name"));
         if ($token) {
             try {
                 $client = new Client(['verify' => false]);
@@ -30,8 +30,11 @@ class AddIdpUserDataMiddleware
                 $request->merge(['user' => $user]);
             } catch (Exception $e) {
                 Log::error($e->getMessage());
-                return response()->json(['message' => $e->getMessage()], $e->getCode());
+                return response()->json([], 401);
+
             }
+        } else {
+            return response()->json([], 401);
         }
 
         return $next($request);
