@@ -15,7 +15,7 @@ class IdpMiddleware
 {
     use ZUserBuilder;
 
-    public function handle(Request $request, Closure $next, string $withPermission = 'with_permissions', string $withTokenUrl = "without_token_url")
+    public function handle(Request $request, Closure $next, string $withPermissions = 'with_permissions', string $withTokenUrl = "without_token_url")
     {
         if ($token = $request->input('token')) {
             $client = new Client(['verify' => false]);
@@ -44,7 +44,7 @@ class IdpMiddleware
                 $attributes = $this->createAttributeArray($userJson->attributes);
 
                 $permissions = [];
-                if ($withPermission == 'with_permissions') {
+                if ($withPermissions == 'with_permissions') {
                     $permissions = $this->retrievePermissions($userJson->id, $roles);
                 }
 
