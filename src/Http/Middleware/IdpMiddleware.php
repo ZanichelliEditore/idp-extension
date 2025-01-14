@@ -15,7 +15,7 @@ class IdpMiddleware
 {
     use ZUserBuilder;
 
-    public function handle(Request $request, Closure $next, string $params = 'with_permissions,remove_token_url')
+    public function handle(Request $request, Closure $next, string $withPermission = 'with_permissions', string $withTokenUrl = "without_token_url")
     {
         if ($token = $request->input('token')) {
             $client = new Client(['verify' => false]);
@@ -44,7 +44,7 @@ class IdpMiddleware
                 $attributes = $this->createAttributeArray($userJson->attributes);
 
                 $permissions = [];
-                if (str_contains($params, 'with_permissions')) {
+                if ($withPermission == 'with_permissions') {
                     $permissions = $this->retrievePermissions($userJson->id, $roles);
                 }
 
@@ -66,7 +66,7 @@ class IdpMiddleware
                 $this->addExtraParametersToUser($user);
 
                 Auth::setUser($user);
-                if (str_contains($params, 'remove_token_url')) {
+                if ($withTokenUrl == 'without_token_url') {
                     if ($request->query('token')) {
                         $request->query->remove('token');
                         return redirect(trim($request->url() . "?" . http_build_query($request->query->all()), "?"));
