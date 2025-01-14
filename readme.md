@@ -79,10 +79,27 @@ In Kernel.php file add "idp" in your routeMiddleware
 'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpMiddleware::class,
 ```
 
-The default behaviour also retrieves the user's permissions, which can be omitted by passing the parameter `without_permissions`
-
+The default behaviour also retrieves the user's permissions (`with_permissions`) and remove token from query params (`remove_token_url`)
+You can specify different configuration like this:
+Avoid to remove token from url
 ```php
-  Route::group(['middleware'=>'idp:without_permissions'],function(){
+  Route::group(['middleware'=>'idp:with_permissions'],function(){
+    Route::get('/', function(){
+      return view('home');
+    });
+  });
+```
+Avoid to retrieve permission
+```php
+  Route::group(['middleware'=>'idp:remove_token_url'],function(){
+    Route::get('/', function(){
+      return view('home');
+    });
+  });
+```
+Avoid to remove token from url and retrieve permission
+```php
+  Route::group(['middleware'=>'idp:with_token_url,without_permissions'],function(){
     Route::get('/', function(){
       return view('home');
     });
