@@ -108,7 +108,7 @@ class IdpMiddleware
             });
         }
 
-        return $builder->pluck('grant');
+        return $builder->pluck('grant')->all();
     }
 
     /**
