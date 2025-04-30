@@ -16,7 +16,10 @@ class ValidateTokenMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        if ($token = $request->input('token')) {
+        $tokenFromHeaders = $request->header()['token'][0];
+        $token = ($request->input('token') ?? $request->cookies->get(config("idp.cookie.name"))) ?? $tokenFromHeaders;
+
+        if ($token) {
             $client = new Client(['verify' => false]);
 
             try {
