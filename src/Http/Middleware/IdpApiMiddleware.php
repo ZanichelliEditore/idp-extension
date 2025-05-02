@@ -7,26 +7,36 @@ use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
+use Firebase\JWT\JWT;
+use Firebase\JWT\JWK;
 
 class IdpApiMiddleware
 {
-    use ZUserBuilder;
-
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, string $withV1User = 'with_v1_user',)
     {
-        $token = $request->input('token') ?? $request->cookies->get(config("idp.cookie.name"));
+        $tokenFromHeaders = $request->header()['token'][0];
+        $token = ($request->input('token') ?? $request->cookies->get(config("idp.cookie.name"))) ?? $tokenFromHeaders;
 
         if ($token) {
             try {
                 $client = new Client(['verify' => false]);
-                $res = $client->get(env('IDP_TOKEN_URL') . '?token=' . $token);
-                $user = json_decode($res->getBody(), true);
+                if ($withV1User === 'with_v1_user') {
+                    $res = $client->get(env('IDP_BASE_URL') . '/v1/user?token=' . $token);
+                    $user = json_decode($res->getBody(), true);
+                } else {
+                    $res = $client->get(env('IDP_BASE_URL') . '/.well-known/jwks.json');
+                    $jwk = json_decode($res->getBody());
+                    $user = (array) JWT::decode($token, JWK::parseKey((array) $jwk->keys[0]));
+                }
 
                 $user['isVerified'] = $user['is_verified'];
                 $user['isEmployee'] = $user['is_employee'];
                 $user['createdAt'] = $user['created_at'];
                 unset($user['is_verified'], $user['is_employee'], $user['created_at']);
+
+                if ($withV1User !== 'with_v1_user') {
+                    unset($user['iat'], $user['exp'], $user['nbf'], $user['sub'], $user['prv']);
+                }
 
                 $request->merge(['user' => $user]);
             } catch (Exception $e) {
