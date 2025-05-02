@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Firebase\JWT\JWT;
 use Firebase\JWT\JWK;
+use Illuminate\Support\Facades\Cache;
 
 class IdpApiMiddleware
 {
+    private const CACHE_KEY = 'public_key';
+
     public function handle(Request $request, Closure $next, string $withV1User = 'with_v1_user',)
     {
         $tokenFromHeaders = $request->header()['token'][0];
@@ -24,8 +27,14 @@ class IdpApiMiddleware
                     $res = $client->get(env('IDP_BASE_URL') . '/v1/user?token=' . $token);
                     $user = json_decode($res->getBody(), true);
                 } else {
-                    $res = $client->get(env('IDP_BASE_URL') . '/.well-known/jwks.json');
-                    $jwk = json_decode($res->getBody());
+                    $jwk = Cache::get(self::CACHE_KEY);
+                    if (!$jwk) {
+                        $res = $client->get(env('IDP_BASE_URL') . '/.well-known/jwks.json');
+                        $jwk = json_decode($res->getBody());
+                        $date = date("d-m-Y H:i:s");
+                        Cache::put(self::CACHE_KEY, $jwk);
+                    }
+
                     $user = (array) JWT::decode($token, JWK::parseKey((array) $jwk->keys[0]));
                 }
 
