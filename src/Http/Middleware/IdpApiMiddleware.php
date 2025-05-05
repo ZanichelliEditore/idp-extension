@@ -27,15 +27,10 @@ class IdpApiMiddleware
                     $res = $client->get(env('IDP_BASE_URL') . '/v1/user?token=' . $token);
                     $user = json_decode($res->getBody(), true);
                 } else {
-                    $cachedData = Cache::store('file')->get(self::CACHE_KEY);
-                    $now = Carbon::now();
-
-                    if (!$cachedData || ($cachedData && $cachedData['date']->diffInDays(Carbon::tomorrow()) > 1)) {
+                    if (!$jwk = Cache::store('file')->get(self::CACHE_KEY)) {
                         $res = $client->get(env('IDP_BASE_URL') . '/.well-known/jwks.json');
                         $jwk = json_decode($res->getBody());
-                        Cache::store('file')->put(self::CACHE_KEY, ['date' => $now, 'jwk' => $jwk]);
-                    } else {
-                        $jwk = $cachedData['jwk'];
+                        Cache::store('file')->put(self::CACHE_KEY, $jwk);
                     }
 
                     $user = (array) JWT::decode($token, JWK::parseKey((array) $jwk->keys[0]));
