@@ -114,30 +114,16 @@ Add to your route file (tipically `web.php`) the new middleware `idp`; code smel
   });
 ```
 
-Alternatively, a second middleware reads the cookie and, if found, retrieves the user's data and adds it to the request
+Alternatively, two middlewares read the cookie and, if found, retrieves the user's data and adds it to the request
 
+`IdpApiMiddleware` retrieves user's data from v1 user api call
 ```php
-'idp.user' => \Zanichelli\IdpExtension\Http\Middleware\IdpApiMiddleware::class,
+'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpApiMiddleware::class,
 ```
 
-The default behaviour retrieves users's data from an api (`with_v1_user`) 
-You can specify different configuration like this:
-Retrieves users's data from an api
+`IdpApiJWKSMiddleware` retrieves user's data from jwt token
 ```php
-  Route::group(['middleware'=>'idp:with_v1_user'],function(){
-    Route::get('/', function(){
-      return view('home');
-    });
-  });
-```
-
-Retrieves users's data from a jwt token
-```php
-  Route::group(['middleware'=>'idp:without_v1_user'],function(){
-    Route::get('/', function(){
-      return view('home');
-    });
-  });
+'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpApiJWKSMiddleware::class,
 ```
 
 ### Extends IDP middleware
