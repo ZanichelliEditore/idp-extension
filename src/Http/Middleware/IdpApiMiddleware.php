@@ -14,11 +14,11 @@ class IdpApiMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        $this->client = new Client(['base_uri' => env('IDP_BASE_URL'), 'verify' => false]);
-
         $token = $request->input('token') ?? $request->cookies->get(config("idp.cookie.name")) ?? $request->headers->get('token');
         if ($token) {
             try {
+                $this->client = new Client(['base_uri' => env('IDP_BASE_URL'), 'verify' => false]);
+
                 $user = $this->getUser($token);
 
                 $request->merge(['user' => $user]);
