@@ -16,10 +16,9 @@ class IdpApiMiddleware
 {
     private const CACHE_KEY = 'public_key';
 
-    public function handle(Request $request, Closure $next, string $withV1User = 'with_v1_user',)
+    public function handle(Request $request, Closure $next, string $withV1User = 'with_v1_user')
     {
-        $tokenFromHeaders = $request->header()['token'][0];
-        $token = ($request->input('token') ?? $request->cookies->get(config("idp.cookie.name"))) ?? $tokenFromHeaders;
+        $token = $request->input('token') ?? $request->cookies->get(config("idp.cookie.name")) ?? $request->headers->get('token');
 
         if ($token) {
             try {
