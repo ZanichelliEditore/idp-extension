@@ -139,7 +139,6 @@ Retrieves users's data from a jwt token
     });
   });
 ```
-If you want to use this middleware without the default behaviour you need to install `"firebase/php-jwt": "^6.11"` package.
 
 ### Extends IDP middleware
 
