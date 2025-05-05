@@ -33,10 +33,9 @@ class IdpApiMiddleware
         return $next($request);
     }
 
-    protected function getUser($token)
+    protected function getUser(string $token): array
     {
         $res = $this->client->get('/v1/user?token=' . $token);
-        $user = json_decode($res->getBody(), true);
-        return $user;
+        return json_decode($res->getBody(), true);
     }
 }

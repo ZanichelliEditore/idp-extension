@@ -10,7 +10,7 @@ class IdpApiJWKSMiddleware extends IdpApiMiddleware
 {
     private const CACHE_KEY = 'public_key';
 
-    protected function getUser($token)
+    protected function getUser(string $token): array
     {
         if ($jwk = Cache::store('file')->get(self::CACHE_KEY)) {
             $res = $this->client->get('/.well-known/jwks.json');
