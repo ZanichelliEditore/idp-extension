@@ -24,7 +24,9 @@ class IdpApiJWKSMiddleware extends IdpApiMiddleware
         $user['username'] = $user['preferred_username'];
         $user['roles'] = $this->getFormattedRoles($user['roles']);
         $user['attributes'] = $user['attributes'] ? $this->getFormattedAttributes($user['attributes']) : [];
-        $user['myz'] = (array) $user['myz'];
+        if (isset($user['myz'])) {
+            $user['myz'] = (array) $user['myz'];
+        }
         unset($user['iat'], $user['exp'], $user['nbf'], $user['sub'], $user['prv'], $user['given_name'], $user['family_name'], $user['preferred_username']);
         return $user;
     }
