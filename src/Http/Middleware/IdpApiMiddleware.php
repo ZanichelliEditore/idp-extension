@@ -2,6 +2,7 @@
 
 namespace Zanichelli\IdpExtension\Http\Middleware;
 
+use Carbon\Carbon;
 use Closure;
 use Exception;
 use GuzzleHttp\Client;
@@ -27,12 +28,15 @@ class IdpApiMiddleware
                     $res = $client->get(env('IDP_BASE_URL') . '/v1/user?token=' . $token);
                     $user = json_decode($res->getBody(), true);
                 } else {
-                    $jwk = Cache::get(self::CACHE_KEY);
-                    if (!$jwk) {
+                    $cachedData = Cache::store('file')->get(self::CACHE_KEY);
+                    $now = Carbon::now();
+
+                    if (!$cachedData || ($cachedData && $cachedData['date']->diffInDays(Carbon::tomorrow()) > 1)) {
                         $res = $client->get(env('IDP_BASE_URL') . '/.well-known/jwks.json');
                         $jwk = json_decode($res->getBody());
-                        $date = date("d-m-Y H:i:s");
-                        Cache::put(self::CACHE_KEY, $jwk);
+                        Cache::store('file')->put(self::CACHE_KEY, ['date' => $now, 'jwk' => $jwk]);
+                    } else {
+                        $jwk = $cachedData['jwk'];
                     }
 
                     $user = (array) JWT::decode($token, JWK::parseKey((array) $jwk->keys[0]));
