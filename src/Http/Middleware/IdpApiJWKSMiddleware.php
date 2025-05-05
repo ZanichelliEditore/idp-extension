@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class IdpApiJWKSMiddleware extends IdpApiMiddleware
 {
-    private const CACHE_KEY = 'public_key';
+    private const CACHE_KEY = 'idp_jwks_public_key';
 
     protected function getUser(string $token): array
     {
