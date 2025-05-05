@@ -17,9 +17,7 @@ This is Laravel package to use with laravel-jwt-idp (Github: https://github.com/
 Add this lines at bottom of your .env file:
 
 ```
-  IDP_URL=https://idp.zanichelli.it/loginForm
-  IDP_TOKEN_URL=https://idp.zanichelli.it/v1/user
-  IDP_LOGOUT_URL=https://idp.zanichelli.it/v1/logout
+  IDP_BASE_URL=https://idp.zanichelli.it
   IDP_COOKIE_NAME=token
 ```
 
