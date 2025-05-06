@@ -7,26 +7,19 @@ use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Zanichelli\IdpExtension\Models\ZTrait\ZUserBuilder;
 
 class IdpApiMiddleware
 {
-    use ZUserBuilder;
+    protected $client;
 
     public function handle(Request $request, Closure $next)
     {
-        $token = $request->input('token') ?? $request->cookies->get(config("idp.cookie.name"));
-
+        $token = $request->input('token') ?? $request->cookies->get(config("idp.cookie.name")) ?? $request->headers->get('token');
         if ($token) {
             try {
-                $client = new Client(['verify' => false]);
-                $res = $client->get(env('IDP_TOKEN_URL') . '?token=' . $token);
-                $user = json_decode($res->getBody(), true);
+                $this->client = new Client(['base_uri' => env('IDP_BASE_URL'), 'verify' => false]);
 
-                $user['isVerified'] = $user['is_verified'];
-                $user['isEmployee'] = $user['is_employee'];
-                $user['createdAt'] = $user['created_at'];
-                unset($user['is_verified'], $user['is_employee'], $user['created_at']);
+                $user = $this->getUser($token);
 
                 $request->merge(['user' => $user]);
             } catch (Exception $e) {
@@ -38,5 +31,11 @@ class IdpApiMiddleware
         }
 
         return $next($request);
+    }
+
+    protected function getUser(string $token): array
+    {
+        $res = $this->client->get('/v1/user?token=' . $token);
+        return json_decode($res->getBody(), true);
     }
 }

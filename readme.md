@@ -17,9 +17,7 @@ This is Laravel package to use with laravel-jwt-idp (Github: https://github.com/
 Add this lines at bottom of your .env file:
 
 ```
-  IDP_URL=https://idp.zanichelli.it/loginForm
-  IDP_TOKEN_URL=https://idp.zanichelli.it/v1/user
-  IDP_LOGOUT_URL=https://idp.zanichelli.it/v1/logout
+  IDP_BASE_URL=https://idp.zanichelli.it
   IDP_COOKIE_NAME=token
 ```
 
@@ -116,10 +114,16 @@ Add to your route file (tipically `web.php`) the new middleware `idp`; code smel
   });
 ```
 
-Alternatively, a second middleware reads the cookie and, if found, retrieves the user's data and adds it to the request
+Alternatively, two middlewares read the cookie and, if found, retrieves the user's data and adds it to the request
 
+`IdpApiMiddleware` retrieves user's data from v1 user api call
 ```php
-'idp.user' => \Zanichelli\IdpExtension\Http\Middleware\AddIdpUserDataMiddleware::class,
+'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpApiMiddleware::class,
+```
+
+`IdpApiJWKSMiddleware` retrieves user's data from jwt token
+```php
+'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpApiJWKSMiddleware::class,
 ```
 
 ### Extends IDP middleware

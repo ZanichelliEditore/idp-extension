@@ -232,7 +232,7 @@ class ZGuard implements Guard, StatefulGuard
             $this->provider->logout($token);
         }
 
-        return redirect(env('IDP_URL') . '?' . http_build_query([
+        return redirect(env('IDP_BASE_URL') . '/loginForm?' . http_build_query([
             'redirect' => env('APP_URL')
         ]));
     }

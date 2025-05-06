@@ -21,7 +21,7 @@ class IdpMiddleware
             $client = new Client(['verify' => false]);
 
             try {
-                $response = $client->get(env('IDP_TOKEN_URL'), [
+                $response = $client->get(env('IDP_BASE_URL') . '/v1/user', [
                     'headers' => [
                         'Authorization' => 'Bearer ' . $token
                     ]
@@ -32,7 +32,7 @@ class IdpMiddleware
                     return response()->json([], 401);
                 }
 
-                return redirect(env('IDP_URL') . '?redirect=' . $request->url());
+                return redirect(env('IDP_BASE_URL') . '/loginForm?redirect=' . $request->url());
             }
 
             if ($response->getStatusCode() == 200) {
@@ -81,7 +81,7 @@ class IdpMiddleware
                 return response()->json([], 401);
             }
 
-            return redirect(env('IDP_URL') . '?redirect=' . $request->url());
+            return redirect(env('IDP_BASE_URL') . '/loginForm?redirect=' . $request->url());
         }
 
         return $next($request);
