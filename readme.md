@@ -71,15 +71,30 @@ if you need to overwrite grants table changes migration.
 
 ### Step 5 - create route middleware and protect your routes
 
+#### For Laravel up to version 10:
+
 In Kernel.php file add "idp" in your routeMiddleware
 
 ```php
 'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpMiddleware::class,
 ```
 
+#### For Laravel from version 11:
+
+Kernel.php file is no more. Register your middleware in 'bootstrap/app.php'
+
+```php
+$middleware->alias([
+  'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpMiddleware::class
+]);
+```
+
+<hr />
+
 The default behaviour also retrieves the user's permissions (`with_permissions`) and remove token from query params (`without_token_url`)
 You can specify different configuration like this:
 Avoid to remove token from url
+
 ```php
   Route::group(['middleware'=>'idp:with_permissions,with_token_url'],function(){
     Route::get('/', function(){
@@ -87,7 +102,9 @@ Avoid to remove token from url
     });
   });
 ```
+
 Avoid to retrieve permission
+
 ```php
   Route::group(['middleware'=>'idp:without_permissions'],function(){
     Route::get('/', function(){
@@ -95,7 +112,9 @@ Avoid to retrieve permission
     });
   });
 ```
+
 Avoid to remove token from url and retrieve permission
+
 ```php
   Route::group(['middleware'=>'idp:without_permissions,with_token_url'],function(){
     Route::get('/', function(){
@@ -117,11 +136,13 @@ Add to your route file (tipically `web.php`) the new middleware `idp`; code smel
 Alternatively, two middlewares read the cookie and, if found, retrieves the user's data and adds it to the request
 
 `IdpApiMiddleware` retrieves user's data from v1 user api call
+
 ```php
 'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpApiMiddleware::class,
 ```
 
 `IdpApiJWKSMiddleware` retrieves user's data from jwt token
+
 ```php
 'idp' => \Zanichelli\IdpExtension\Http\Middleware\IdpApiJWKSMiddleware::class,
 ```
