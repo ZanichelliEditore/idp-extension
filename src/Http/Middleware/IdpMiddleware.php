@@ -66,7 +66,7 @@ class IdpMiddleware
                 $this->addExtraParametersToUser($user);
 
                 Auth::setUser($user);
-                if ($withTokenUrl == 'without_token_url') {
+                if ($withTokenUrl == 'without_token_url' && !$request->ajax() && !$request->wantsJson()) {
                     if ($request->query('token')) {
                         $request->query->remove('token');
                         return redirect(trim($request->url() . "?" . http_build_query($request->query->all()), "?"));
