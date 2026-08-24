@@ -96,6 +96,9 @@ class IdpMiddleware
      */
     protected function retrievePermissions($userId, array $roles)
     {
+        if (empty($roles)) {
+            return [];
+        }
         $builder = DB::table('grants');
 
         foreach ($roles as $role) {
