@@ -18,7 +18,7 @@ class IdpMiddleware
     public function handle(Request $request, Closure $next, string $withPermissions = 'with_permissions', string $withTokenUrl = "without_token_url")
     {
         if ($token = $request->input('token')) {
-            $client = new Client(['verify' => false]);
+            $client = $this->idpClient();
 
             try {
                 $response = $client->get(env('IDP_BASE_URL') . '/v1/user', [
@@ -63,9 +63,29 @@ class IdpMiddleware
                     $attributes
                 );
 
+                // A token that changes who owns the session is a login: the
+                // identifier the visitor arrived with must not survive it,
+                // otherwise a planted one becomes authenticated (CWE-384).
+                // Replays by the user already in the session are not logins,
+                // so they leave the identifier alone.
+                // The user in the session may come from another endpoint or
+                // from a consumer's addExtraParametersToUser(), so its id is
+                // compared as a string; a stale or foreign value counts as no
+                // user rather than crashing the login.
+                $current = $request->hasSession()
+                    ? $request->session()->get('user')
+                    : null;
+                $currentId = is_object($current) && isset($current->id) ? $current->id : null;
+                $isNewLogin = $currentId === null || (string) $currentId !== (string) $userJson->id;
+
                 $this->addExtraParametersToUser($user);
 
                 Auth::setUser($user);
+
+                if ($request->hasSession() && $isNewLogin) {
+                    $request->session()->regenerate(true);
+                }
+
                 if ($withTokenUrl == 'without_token_url' && !$request->ajax() && !$request->wantsJson()) {
                     if ($request->query('token')) {
                         $request->query->remove('token');
@@ -85,6 +105,16 @@ class IdpMiddleware
         }
 
         return $next($request);
+    }
+
+    /**
+     * The http client used to talk to the identity provider.
+     *
+     * @return Client
+     */
+    protected function idpClient()
+    {
+        return new Client(['verify' => false]);
     }
 
     /**
