@@ -113,6 +113,61 @@ class IdpMiddlewareSessionFixationTest extends TestCase
     }
 
     /**
+     * The identifier in the session may have been stored by another endpoint
+     * or altered by a consumer, so an id that differs only in type is the same
+     * user and must not rotate the session on every request.
+     */
+    public function test_it_compares_the_user_id_loosely_on_type(): void
+    {
+        $this->fakeIdpUser(1767);
+        $this->withSession(['user' => $this->zUser('1767')]);
+
+        $response = $this->getJson('/_test/idp?token=an-idp-token');
+
+        $response->assertOk();
+        $this->assertSame(CapturePreLoginSession::$sessionId, $response->json('session_id'));
+    }
+
+    /**
+     * A session whose user is not a ZUser (stale class, foreign value) is
+     * treated as a pre-login session instead of crashing the login.
+     */
+    public function test_a_non_object_session_user_counts_as_a_new_login(): void
+    {
+        $this->fakeIdpUser(1767);
+        $this->withSession(['user' => ['id' => 1767]]);
+
+        $response = $this->getJson('/_test/idp?token=an-idp-token');
+
+        $response->assertOk();
+        $response->assertJsonPath('user_id', 1767);
+        $this->assertNotSame(CapturePreLoginSession::$sessionId, $response->json('session_id'));
+    }
+
+    /**
+     * The real attack: the visitor arrives with a session cookie planted by
+     * the attacker. The authenticated response must set a different session
+     * cookie and the planted record must be gone.
+     */
+    public function test_a_planted_session_cookie_is_replaced_by_the_login(): void
+    {
+        $this->fakeIdpUser(1767);
+        $cookieName = $this->app['config']->get('session.cookie');
+
+        // The anonymous visit is rejected by the middleware, but the application still issues a session cookie.
+        $planted = $this->getJson('/_test/idp')->getCookie($cookieName)->getValue();
+        $this->assertNotSame('', $this->app['session']->getHandler()->read($planted), 'Precondition: the planted record must exist.');
+
+        $response = $this->withCredentials()->withCookie($cookieName, $planted)->getJson('/_test/idp?token=an-idp-token');
+
+        $response->assertOk();
+        $response->assertJsonPath('user_id', 1767);
+        $this->assertNotSame($planted, $response->json('session_id'));
+        $this->assertNotSame($planted, $response->getCookie($cookieName)->getValue());
+        $this->assertSame('', $this->app['session']->getHandler()->read($planted));
+    }
+
+    /**
      * Queue the payload GET {IDP_BASE_URL}/v1/user answers with.
      */
     private function fakeIdpUser(int $userId): void
@@ -131,7 +186,7 @@ class IdpMiddlewareSessionFixationTest extends TestCase
         ]));
     }
 
-    private function zUser(int $userId): ZUser
+    private function zUser($userId): ZUser
     {
         return ZUser::create($userId, 'user' . $userId, 'user' . $userId . '@zanichelli.it', 'a-token', true, 'Test', 'User', true, '2026-01-01 00:00:00');
     }

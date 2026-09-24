@@ -68,10 +68,15 @@ class IdpMiddleware
                 // otherwise a planted one becomes authenticated (CWE-384).
                 // Replays by the user already in the session are not logins,
                 // so they leave the identifier alone.
+                // The user in the session may come from another endpoint or
+                // from a consumer's addExtraParametersToUser(), so its id is
+                // compared as a string; a stale or foreign value counts as no
+                // user rather than crashing the login.
                 $current = $request->hasSession()
                     ? $request->session()->get('user')
                     : null;
-                $isNewLogin = !$current || $current->id !== $userJson->id;
+                $currentId = is_object($current) && isset($current->id) ? $current->id : null;
+                $isNewLogin = $currentId === null || (string) $currentId !== (string) $userJson->id;
 
                 $this->addExtraParametersToUser($user);
 
