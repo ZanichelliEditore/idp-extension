@@ -72,17 +72,16 @@ class IdpMiddleware
                 // from a consumer's addExtraParametersToUser(), so its id is
                 // compared as a string; a stale or foreign value counts as no
                 // user rather than crashing the login.
-                $current = $request->hasSession()
-                    ? $request->session()->get('user')
-                    : null;
-                $currentId = is_object($current) && isset($current->id) ? $current->id : null;
-                $isNewLogin = $currentId === null || (string) $currentId !== (string) $userJson->id;
+                // Routes outside the web group (api, for instance) start no
+                // session, and session() would throw there.
+                $isNewLogin = $request->hasSession()
+                    && (string) ($request->session()->get('user')->id ?? null) !== (string) $userJson->id;
 
                 $this->addExtraParametersToUser($user);
 
                 Auth::setUser($user);
 
-                if ($request->hasSession() && $isNewLogin) {
+                if ($isNewLogin) {
                     $request->session()->regenerate(true);
                 }
 

@@ -145,6 +145,23 @@ class IdpMiddlewareSessionFixationTest extends TestCase
     }
 
     /**
+     * Routes outside the web group (the api group, for instance) do not start
+     * a session, so the request has none and the login must still succeed.
+     */
+    public function test_it_authenticates_a_request_without_a_session(): void
+    {
+        Route::middleware(FakeIdpMiddleware::class . ':without_permissions')->get('/_test/idp-stateless', function () {
+            return ['user_id' => auth()->id()];
+        });
+        $this->fakeIdpUser(1767);
+
+        $response = $this->getJson('/_test/idp-stateless?token=an-idp-token');
+
+        $response->assertOk();
+        $response->assertJsonPath('user_id', 1767);
+    }
+
+    /**
      * The real attack: the visitor arrives with a session cookie planted by
      * the attacker. The authenticated response must set a different session
      * cookie and the planted record must be gone.
