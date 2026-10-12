@@ -92,6 +92,8 @@ $middleware->alias([
 <hr />
 
 The default behaviour also retrieves the user's permissions (`with_permissions`) and remove token from query params (`without_token_url`)
+
+When a `token` authenticates a user other than the one already in the session (a login), the middleware regenerates the session id and the CSRF token and destroys the previous session record, to prevent session fixation. Requests that replay a token for the user already in the session keep their session id.
 You can specify different configuration like this:
 Avoid to remove token from url
 
