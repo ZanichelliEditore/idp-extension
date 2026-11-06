@@ -27,6 +27,8 @@ If you need to use your own login form (instead of the IDP one), please add this
   IDP_LOGIN_URL=https://idp.zanichelli.it/v4/login
 ```
 
+These variables are read only through the `idp` config (`config('idp.base_url')`, `config('idp.login_url')`, `config('idp.cookie.name')`), so the package works with `php artisan config:cache`. If you published `config/idp.php` from an older version, the missing keys are merged automatically from the package defaults.
+
 ### Step 3 - auth.php editing
 
 Edit `config/auth.php` as follow:
