@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function defineEnvironment($app)
     {
-        $_ENV['IDP_BASE_URL'] = $_SERVER['IDP_BASE_URL'] = self::IDP_BASE_URL;
+        $app['config']->set('idp.base_url', self::IDP_BASE_URL);
 
         $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
 

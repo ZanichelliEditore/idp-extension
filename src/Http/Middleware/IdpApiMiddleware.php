@@ -17,7 +17,7 @@ class IdpApiMiddleware
         $token = $request->input('token') ?? $request->cookies->get(config("idp.cookie.name")) ?? $request->headers->get('token');
         if ($token) {
             try {
-                $this->client = new Client(['base_uri' => env('IDP_BASE_URL'), 'verify' => false]);
+                $this->client = new Client(['base_uri' => config('idp.base_url'), 'verify' => false]);
 
                 $user = $this->getUser($token);
 

@@ -2,6 +2,7 @@
 
 namespace Zanichelli\IdpExtension\Providers;
 
+use Illuminate\Contracts\Foundation\CachesConfiguration;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -17,6 +18,11 @@ class IdpProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/idp.php',
+            'idp'
+        );
+
         Auth::extend('idp', function ($app, $name, array $config) {
             return tap($this->makeGuard($config), function ($guard) {
                 $this->app->refresh('request', $guard, 'setRequest');
@@ -88,6 +94,12 @@ class IdpProvider extends ServiceProvider
      */
     protected function mergeConfigFrom($path, $key)
     {
+        // With "php artisan config:cache" the merged values are already in the
+        // cached file, and env() would return null here.
+        if ($this->app instanceof CachesConfiguration && $this->app->configurationIsCached()) {
+            return;
+        }
+
         $config = $this->app['config']->get($key, []);
 
         $this->app['config']->set($key, $this->mergeConfig(require $path, $config));
