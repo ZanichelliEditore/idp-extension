@@ -71,7 +71,7 @@ class ZAuthServiceProvider implements UserProvider
         $client = new Client();
 
         try {
-            $response = $client->post(env('IDP_LOGIN_URL'), [
+            $response = $client->post(config('idp.login_url'), [
                 'body' => [
                     'username' => $credentials['username'],
                     'password' => $credentials['password']
@@ -126,7 +126,7 @@ class ZAuthServiceProvider implements UserProvider
         $client = new Client();
 
         try {
-            $response = $client->get(env('IDP_BASE_URL') . '/v1/logout', [
+            $response = $client->get(config('idp.base_url') . '/v1/logout', [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => 'Bearer ' . $token

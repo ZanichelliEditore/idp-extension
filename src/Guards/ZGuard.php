@@ -232,8 +232,8 @@ class ZGuard implements Guard, StatefulGuard
             $this->provider->logout($token);
         }
 
-        return redirect(env('IDP_BASE_URL') . '/loginForm?' . http_build_query([
-            'redirect' => env('APP_URL')
+        return redirect(config('idp.base_url') . '/loginForm?' . http_build_query([
+            'redirect' => config('app.url')
         ]));
     }
 }
